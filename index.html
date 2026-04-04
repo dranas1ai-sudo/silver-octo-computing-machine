@@ -3,133 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neural Planner Pro - V6 Ultimate</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Tajawal:wght@400;500;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <title>Neural Planner - V5 Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #020204;
-            --surface-color: rgba(15, 15, 25, 0.45);
+            --bg-color: #030305;
+            --surface-color: rgba(20, 20, 30, 0.5);
             --surface-border: rgba(255, 255, 255, 0.1);
             --text-primary: #f8fafc;
-            --text-secondary: #a3b3c9;
+            --text-secondary: #94a3b8;
             --primary-color: #0ea5e9; 
-            --danger-color: #f43f5e;
             --success-color: #10b981;
-            --font-en: 'Outfit', sans-serif;
-            --font-ar: 'Tajawal', sans-serif;
-            --font-note: 'Playfair Display', serif; /* خط احترافي للملاحظة */
-            --transition: all 0.5s cubic-bezier(0.3, 0.8, 0.3, 1);
+            --danger-color: #f43f5e;
+            --transition: all 0.4s ease;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html[dir="rtl"] { font-family: var(--font-ar); }
-        html[dir="ltr"] { font-family: var(--font-en); }
-        body { font-family: inherit; color: var(--text-primary); overflow-x: hidden; min-height: 100vh; background-color: var(--bg-color); }
+        html[dir="rtl"] { font-family: 'Tajawal', sans-serif; }
+        html[dir="ltr"] { font-family: 'Outfit', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-primary); overflow-x: hidden; min-height: 100vh; }
 
-        /* --- Dynamic Brain original background --- */
-        #brain-bg {
-            position: fixed; inset: 0; z-index: -2;
-            background-image: url('brain.gif');
-            background-size: cover; background-position: center;
-            /* توهج أولي خفيف CSS لتجهيز الصورة */
-            filter: brightness(1.1) contrast(1.1) saturate(1.1);
-            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.7s ease, box-shadow 0.7s ease;
-        }
+        /* --- Background & Effects --- */
+        #brain-bg { position: fixed; inset: 0; z-index: -2; background: url('brain.gif') center/cover no-repeat; transition: var(--transition); }
+        #brain-overlay { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 0%, rgba(5,5,8,0.6) 0%, rgba(0,0,0,0.85) 100%); backdrop-filter: blur(2px); }
+        .brain-pulse { transform: scale(1.05); filter: brightness(1.5) contrast(1.2); }
+
+        /* --- العيون (Intro) --- */
+        #intro-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; animation: fadeOut 1s forwards 2s; }
+        .eyes-container { display: flex; gap: 40px; }
+        .eye { width: 45px; height: 12px; background: var(--primary-color); border-radius: 50%; box-shadow: 0 0 20px var(--primary-color); animation: blink 4s infinite; }
+        @keyframes blink { 0%, 96%, 100% { transform: scaleY(1); } 98% { transform: scaleY(0.1); } }
+        @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+
+        /* --- Navigation --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: rgba(3,3,5,0.7); backdrop-filter: blur(15px); border-bottom: 1px solid var(--surface-border); position: sticky; top: 0; z-index: 100; }
+        .brand h1 { font-size: 1.3rem; color: var(--primary-color); }
+        .nav-actions { display: flex; gap: 10px; }
+
+        /* --- Buttons --- */
+        button { cursor: pointer; border: none; border-radius: 10px; transition: var(--transition); font-family: inherit; }
+        .btn-primary { background: rgba(255,255,255,0.05); border: 1px solid var(--surface-border); color: #fff; padding: 10px 18px; font-size: 0.9rem; }
+        .btn-primary:hover { border-color: var(--primary-color); background: rgba(14,165,233,0.1); }
+        .btn-lang { background: rgba(255,255,255,0.02); padding: 8px 15px; border-radius: 20px; color: #fff; font-weight: bold; border: 1px solid var(--surface-border); }
+
+        /* --- Main Content --- */
+        main { padding: 30px 5%; max-width: 900px; margin: 0 auto; }
+        .view { display: none; }
+        .view.active { display: block; animation: fadeInView 0.5s ease; }
+        @keyframes fadeInView { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .glass { background: var(--surface-color); backdrop-filter: blur(20px); border: 1px solid var(--surface-border); border-radius: 20px; padding: 25px; margin-bottom: 25px; }
         
-        #brain-overlay {
-            position: fixed; inset: 0; z-index: -1;
-            background: radial-gradient(circle at 50% 0%, rgba(5,5,8,0.7) 0%, rgba(0,0,0,0.85) 100%);
-            backdrop-filter: blur(2px);
-            transition: background 0.7s ease;
-        }
+        .profile-box { display: flex; gap: 10px; margin-top: 15px; }
+        .profile-box input { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--surface-border); padding: 12px; border-radius: 10px; color: #fff; }
 
-        /* توهج وتركيز 4k سينمائي حقيقي ومفصل */
-        .brain-pulse {
-            transform: scale(1.08); /* اقتراب المخ قليلاً */
-            /* زيادة شديدة ودقيقة للإضاءة والتباين واللون، وإضافة هالة زرقاء */
-            filter: brightness(1.7) contrast(1.4) saturate(1.5) drop-shadow(0 0 50px rgba(14, 165, 233, 0.7)); 
-        }
-        
-        .overlay-pulse {
-            background: radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.5) 0%, rgba(0,0,0,0.8) 100%) !important;
-            backdrop-filter: blur(0px) !important; /* تقليل الضبابية لزيادة الوضوح */
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { padding: 20px; cursor: pointer; }
+        .task-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .toggle-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--surface-border); display: flex; align-items: center; justify-content: center; background: none; }
+        .toggle-btn.done { background: var(--success-color); border-color: var(--success-color); color: #000; }
+        .toggle-btn.done::after { content: '✓'; font-weight: bold; }
 
-        /* --- Intro Animation --- */
-        #intro-overlay {
-            position: fixed; inset: 0; background-color: #000; z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-            animation: fadeOutIntro 1s forwards; animation-delay: 2s;
-        }
-        .intro-loader { width: 50px; height: 50px; border-radius: 50%; border: 3px solid var(--primary-color); border-top-color: transparent; animation: spin 1s infinite linear; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fadeOutIntro { to { opacity: 0; visibility: hidden; } }
-
-        /* --- Toast Notifications --- */
-        .toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
-        .toast { background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(10px); border: 1px solid var(--surface-border); color: white; padding: 12px 24px; border-radius: 30px; font-size: 0.95rem; font-weight: 500; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideUp 0.3s ease forwards, fadeOut 0.3s ease 2.7s forwards; }
-        .toast.error { border-color: var(--danger-color); box-shadow: 0 5px 20px rgba(244, 63, 94, 0.2); }
-        .toast.success { border-color: var(--success-color); box-shadow: 0 5px 20px rgba(16, 185, 129, 0.2); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
-
-        /* --- Glass UI & Nav --- */
-        .glass { background: var(--surface-color); backdrop-filter: blur(25px); border: 1px solid var(--surface-border); border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05); }
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 12px 5%; position: sticky; top: 0; z-index: 100; background: rgba(3, 3, 5, 0.6); backdrop-filter: blur(25px); border-bottom: 1px solid var(--surface-border); }
-        .brand h1 { font-size: 1.3rem; font-weight: 700; color: var(--primary-color); }
-        .brand span { font-size: 0.7rem; color: var(--text-secondary); }
-        .nav-actions { display: flex; gap: 12px; align-items: center; }
-
-        button { cursor: pointer; border: none; outline: none; font-family: inherit; transition: var(--transition); }
-        .btn-primary { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--surface-border); color: white; padding: 9px 18px; border-radius: 10px; font-weight: 500; font-size: 0.85rem; }
-        .btn-primary:hover { background: rgba(14, 165, 233, 0.1); border-color: var(--primary-color); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(14,165,233,0.2); }
-        .btn-lang { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.02); border: 1px solid var(--surface-border); color: white; padding: 7px 14px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; }
-        .btn-lang:hover { background: rgba(255,255,255,0.08); border-color: var(--primary-color); transform: scale(1.03); }
-        .btn-lang svg { width: 14px; height: 14px; fill: currentColor; }
-
-        main { padding: 40px 5%; max-width: 900px; margin: 0 auto; }
-        .view { display: none; opacity: 0; transform: translateY(15px); transition: var(--transition); }
-        .view.active { display: block; opacity: 1; transform: translateY(0); }
-
-        /* --- Dashboard & Profile Section --- */
-        .profile-section { padding: 25px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 15px; }
-        .profile-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .card { padding: 22px; cursor: pointer; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.15); background: rgba(30, 30, 40, 0.6); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(14, 165, 233, 0.1); }
-
-        /* --- Forms & Inputs --- */
-        .input-group { margin-bottom: 22px; }
-        .input-group label { display: block; margin-bottom: 7px; color: var(--text-secondary); font-size: 0.85rem;}
-        input { width: 100%; background: rgba(0, 0, 0, 0.45); border: 1px solid var(--surface-border); color: white; padding: 12px; border-radius: 10px; transition: var(--transition); font-family: inherit; font-size: 0.9rem; }
-        input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 2px rgba(14,165,233,0.1); }
-        
-        /* تصميم مخصص لإدخال الاسم */
-        input#user-name { border-color: rgba(255, 255, 255, 0.15); }
-        input#user-name:focus { border-color: var(--success-color); box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
-
-        .task-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: center; }
-        .task-row input[type="text"] { flex: 2; }
-        .task-row input[type="time"] { flex: 1; }
-        .btn-icon { width: 42px; height: 42px; flex-shrink: 0; border-radius: 10px; background: rgba(239,68,68,0.1); color: var(--danger-color); font-size: 0.8rem;}
-        .btn-icon:hover { background: var(--danger-color); color: white; }
-
-        /* --- Task Detail --- */
-        .task-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; border-bottom: 1px solid var(--surface-border); }
-        .task-item:last-child { border-bottom: none; }
-        .task-info { display: flex; gap: 12px; align-items: center; }
-        .task-time { color: #a78bfa; background: rgba(167, 139, 250, 0.1); padding: 4px 9px; border-radius: 6px; font-size: 0.8rem; font-weight: bold;}
-        .task-name { font-size: 1rem; transition: var(--transition); }
-        .task-name.done { text-decoration: line-through; color: var(--text-secondary); }
-        
-        .toggle-btn { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--surface-border); display: flex; justify-content: center; align-items: center; background: transparent; flex-shrink: 0; }
-        .toggle-btn.done { background: var(--success-color); border-color: var(--success-color); color: #000; box-shadow: 0 0 10px rgba(16,185,129,0.3); }
-        .toggle-btn.done::after { content: '✓'; font-weight: bold; font-size: 0.8rem;}
-
-        @media (max-width: 768px) {
-            .task-row { flex-direction: column; }
-            .task-row input, .task-row .btn-icon { width: 100%; }
-        }
+        .toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; }
+        .toast { background: rgba(0,0,0,0.9); padding: 12px 25px; border-radius: 30px; border: 1px solid var(--primary-color); margin-top: 10px; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -145,496 +82,198 @@
 
     <nav>
         <div class="brand">
-            <h1 data-i18n="title">Neural Planner Pro</h1>
-            <span data-i18n="subtitle">V6 Ultimate Edition</span>
+            <h1 data-i18n="title">Neural Planner</h1>
+            <span style="font-size: 0.7rem; color: var(--text-secondary);">V5 PRO • Mohammed Anas</span>
         </div>
         <div class="nav-actions">
-            <button class="btn-lang" onclick="app.toggleLang()">
-                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
-                <span id="langBtnText">EN</span>
-            </button>
+            <button class="btn-lang" onclick="app.toggleLang()" id="langBtn">AR</button>
             <button class="btn-primary" onclick="app.switchView('dashboard')" data-i18n="home">Home</button>
         </div>
     </nav>
 
     <main>
         <div id="view-dashboard" class="view active">
-            
-            <div class="profile-section glass">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 15px; margin-bottom: 15px;">
-                    <h2 data-i18n="dailyReport">Neural Core Status</h2>
-                    <button class="btn-primary btn-lang" style="background: var(--success-color); color: #000; font-weight: bold; border:none;" onclick="app.downloadSummaryImage()">
-                        📸 <span data-i18n="generateCard">Neural Card</span>
-                    </button>
+            <div class="glass">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 data-i18n="status">System Status</h2>
+                    <button class="btn-primary" onclick="app.downloadImage()" style="background: var(--primary-color); color: #000; font-weight: bold; border: none;">📸 <span data-i18n="card">Card</span></button>
                 </div>
-                <div class="profile-header">
-                    <input type="text" id="user-name" data-i18n-ph="userNamePlaceholder" placeholder="Enter Full Name..." style="flex: 2; margin-right: 10px;">
-                    <button class="btn-primary" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); color: var(--success-color);" onclick="app.saveProfile()" data-i18n="saveName">✓ Save</button>
-                </div>
-                <div style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 10px;">
-                    Enter full name for validation on download. Direct Adotion requires Mohammed Anas' signature.
+                <div class="profile-box">
+                    <input type="text" id="user-name" data-i18n-ph="namePh" placeholder="Enter name for card...">
+                    <button class="btn-primary" onclick="app.saveName()" data-i18n="save">Save</button>
                 </div>
             </div>
 
-            <div style="display: flex; justify-content: space-between; margin-bottom: 30px; align-items: center;">
-                <h2 data-i18n="yourRoutines">Your Routine Architectures</h2>
-                <button class="btn-primary" onclick="app.switchView('create')" data-i18n="newPlan" style="border: 1px dashed var(--primary-color);">+ New Plan</button>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                <h3 data-i18n="routines">Routines</h3>
+                <button class="btn-primary" onclick="app.switchView('create')" data-i18n="new">+ New</button>
             </div>
-            <div id="tables-grid" class="grid"></div>
+            <div id="grid" class="grid"></div>
         </div>
 
-        <div id="view-create" class="view glass" style="padding: 30px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 25px; align-items: center;">
-                <h2 data-i18n="designPlan">Design New Plan</h2>
-                <button class="btn-primary" style="color:var(--danger-color); border-color:rgba(239,68,68,0.3); background: rgba(239,68,68,0.05);" onclick="app.switchView('dashboard')" data-i18n="cancel">Cancel</button>
-            </div>
-            
-            <div class="input-group">
-                <label data-i18n="moduleTitle">Module Title</label>
-                <input type="text" id="table-title" data-i18n-ph="titlePlaceholder" placeholder="e.g., Deep Work Protocol...">
-            </div>
-
-            <div class="input-group">
-                <label data-i18n="defineSeq">Define Tasks List</label>
-                <div id="task-list"></div>
-                <button class="btn-primary" style="width: 100%; margin-top: 15px; border-style: dashed; padding: 12px;" onclick="app.addTaskRow()" data-i18n="addNode">+ Add New Task</button>
-            </div>
-
-            <div style="text-align: end; margin-top: 35px; border-top: 1px solid var(--surface-border); padding-top: 25px;">
-                <button class="btn-primary" style="background: var(--primary-color); color: #000; font-weight: bold; padding: 12px 30px;" onclick="app.saveTable()" data-i18n="launch">Launch Routine ✓</button>
+        <div id="view-create" class="view glass">
+            <h2 data-i18n="new">New Plan</h2>
+            <input type="text" id="title-input" placeholder="Title..." style="width: 100%; margin: 20px 0; background: rgba(0,0,0,0.3); border: 1px solid var(--surface-border); padding: 12px; border-radius: 10px; color: #fff;">
+            <div id="task-inputs"></div>
+            <button class="btn-primary" onclick="app.addTaskRow()" style="width: 100%; margin-top: 10px;">+ Add Task</button>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-primary" onclick="app.savePlan()" style="flex: 1; background: var(--success-color); color: #000; border: none;">Save</button>
+                <button class="btn-primary" onclick="app.switchView('dashboard')" style="flex: 1;">Cancel</button>
             </div>
         </div>
 
         <div id="view-detail" class="view">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <div>
-                    <button class="btn-primary" style="margin-bottom: 10px;" onclick="app.switchView('dashboard')" data-i18n="back">← Back</button>
-                    <h2 id="detail-title">Plan Details</h2>
-                </div>
-                <button class="btn-primary" style="color:var(--danger-color); border-color:rgba(239,68,68,0.3); background: rgba(239,68,68,0.05);" onclick="app.deleteCurrentTable()" data-i18n="delete">🗑 Delete</button>
+            <div class="glass">
+                <button class="btn-primary" onclick="app.switchView('dashboard')" style="margin-bottom: 15px;">← Back</button>
+                <h2 id="detail-title"></h2>
+                <div id="detail-list" style="margin-top: 20px;"></div>
+                <button class="btn-primary" onclick="app.deletePlan()" style="width: 100%; margin-top: 25px; color: var(--danger-color); border-color: rgba(244,63,94,0.2);">Delete Plan</button>
             </div>
-            <div class="glass" id="detail-body" style="padding: 10px 0;"></div>
         </div>
     </main>
 
-    <canvas id="sharing-canvas" style="display:none;"></canvas>
+    <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        // --- Translations (تم تعديلsubtitle كما طلبت) ---
         const translations = {
-            en: {
-                title: "Neural Planner Pro", subtitle: "V6 Ultimate Edition",
-                home: "Home", newPlan: "+ New Plan", yourRoutines: "Your Routine Architectures",
-                noRoutines: "No routine architectures initialized. System is ready.",
-                designPlan: "Design New Plan", cancel: "Cancel", moduleTitle: "Module Title",
-                titlePlaceholder: "e.g., Deep Work Protocol...", defineSeq: "Define Tasks",
-                addNode: "+ Add New Task", taskPlaceholder: "Task description...",
-                launch: "Launch Routine ✓", back: "← Back", delete: "🗑 Delete Plan",
-                emptyAlert: "System must define at least one task to save.",
-                confirmDelete: "Permanently delete this plan?",
-                tasksLabel: "Tasks", doneLabel: "Completed",
-                deletedNotice: "Plan deleted direktly.",
-                saveName: "Save Name", userNamePlaceholder: "Full Name for validation",
-                saveSuccess: "Name validated locally.", nameAlert: "Enter Full Name!",
-                dailyReport: "Neural Core Status", generateCard: "Neural Card",
-                imgTitle: "Daily Cognitive Report", imgCompleted: "Completed Today:",
-                imgLevel: "Focus Level: V6", imgNamePlaceholder: "Validated For:",
-                imgSignatureNote: "Mohammed Anas signature required for Adoption.",
-                imgFooter: "Neural Planner V6 - Pro Ultimate Share",
-                phrases: ["System Optimized.", "Neural pathways connected.", "Exec routine."]
-            },
-            ar: {
-                title: "المخطط العصبي", subtitle: "الإصدار السادس الفائق",
-                home: "الرئيسية", newPlan: "+ خطة جديدة", yourRoutines: "خططك اليومية",
-                noRoutines: "لا توجد خطط حالياً. النظام جاهز للعمل.",
-                designPlan: "تصميم خطة جديدة", cancel: "إلغاء", moduleTitle: "عنوان الخطة",
-                titlePlaceholder: "مثال: روتين العمل العميق...", defineSeq: "قائمة المهام",
-                addNode: "+ إضافة مهمة جديدة", taskPlaceholder: "اكتب تفاصيل المهمة هنا...",
-                launch: "حفظ الخطة ✓", back: "← رجوع", delete: "🗑 حذف الخطة",
-                emptyAlert: "عفواً، يجب كتابة مهمة واحدة على الأقل قبل الحفظ!",
-                confirmDelete: "هل أنت متأكد من الحذف النهائي لهذه الخطة؟",
-                tasksLabel: "مهام", doneLabel: "مكتملة",
-                deletedNotice: "تم حذف الخطة مباشرة.",
-                saveName: "حفظ الاسم ✅", userNamePlaceholder: "ادخل الاسم الكامل للتحقق",
-                saveSuccess: "تم التحقق من الاسم وتخزينه.", nameAlert: "عفواً، اكتب الاسم الكامل!",
-                dailyReport: "حالة النواة العصبية", generateCard: "البطاقة",
-                imgTitle: "التقرير المعرفي اليومي", imgCompleted: "أنجز اليوم:",
-                imgLevel: "مستوى التركيز: V6", imgNamePlaceholder: "تم التحقق باسم:",
-                imgSignatureNote: "توقيع محمد أنس مطلوب لاعتماد البطاقة.",
-                imgFooter: "Neural Planner V6 - Pro Ultimate Share",
-                phrases: ["تم تحسين النظام.", "تم ربط المسارات العصبية.", "جاري التنفيذ."]
-            }
+            en: { title: "Neural Planner", home: "Home", status: "System Status", card: "Neural Card", namePh: "Your Name...", save: "Save Name", routines: "Routines", new: "+ New Plan", tasks: "Tasks", done: "Done", note: "This report requires the direct review of Mohammed Anas for adoption.", footer: "Neural Core V5 Pro" },
+            ar: { title: "المخطط العصبي", home: "الرئيسية", status: "حالة النظام", card: "البطاقة", namePh: "اكتب اسمك هنا...", save: "حفظ الاسم", routines: "الخطط اليومية", new: "+ خطة جديدة", tasks: "مهام", done: "مكتملة", note: "يرجى إرسال هذه البطاقة لمحمد أنس لتوقيعها واعتمادها.", footer: "النواة العصبية V5" }
         };
-
-        const audio = {
-            ctx: null,
-            init() {
-                if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                if (this.ctx.state === 'suspended') this.ctx.resume();
-            },
-            play(type) {
-                this.init(); if (!this.ctx) return;
-                const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                const t = this.ctx.currentTime;
-                if (type === 'tap') {
-                    // صوت نقرة "4k" أكثر دقة وأقل ضجيجاً
-                    osc.frequency.setValueAtTime(800, t); osc.frequency.exponentialRampToValueAtTime(400, t+0.04);
-                    gain.gain.setValueAtTime(0.06, t); gain.gain.exponentialRampToValueAtTime(0.001, t+0.04);
-                    osc.start(t); osc.stop(t+0.04);
-                } else if (type === 'success') {
-                    // صوت نجاح "4k" متوهج
-                    osc.frequency.setValueAtTime(500, t); osc.frequency.setValueAtTime(900, t+0.08);
-                    gain.gain.setValueAtTime(0.05, t); gain.gain.linearRampToValueAtTime(0, t+0.3);
-                    osc.start(t); osc.stop(t+0.3);
-                }
-            }
-        };
-
-        ['click', 'touchstart'].forEach(e => document.addEventListener(e, () => audio.init(), {once:true}));
 
         const app = {
-            data: [], currentId: null, lang: localStorage.getItem('appLang') || 'en',
-            // شعارك الموجود في المستودع
-            logoPath: '1000201034.png', 
+            data: JSON.parse(localStorage.getItem('np5')) || [],
+            lang: localStorage.getItem('lang') || 'en',
+            currentId: null,
 
             init() {
-                setTimeout(() => document.getElementById('intro-overlay')?.remove(), 2500);
                 this.applyLang();
-                const stored = localStorage.getItem('plannerV6_ProUltimate');
-                if (stored) this.data = JSON.parse(stored);
-                this.switchView('dashboard');
-                // تحميل الاسم إذا كان موجوداً
-                this.loadProfile();
-            },
-
-            loadProfile() {
-                const nameInput = document.getElementById('user-name');
-                const savedName = localStorage.getItem('userName_Validated');
-                if (savedName) nameInput.value = savedName;
-            },
-
-            saveProfile() {
-                audio.play('tap');
-                const nameInput = document.getElementById('user-name');
-                const name = nameInput.value.trim();
-                if (!name) { this.showToast('nameAlert', 'error'); return; }
-
-                localStorage.setItem('userName_Validated', name);
-                this.triggerNeuralGlow(); // توهج عند الحفظ
-                this.showToast('saveSuccess', 'success');
-            },
-
-            // دالة تفعيل نبضة المخ الاحترافية الفائقة 4k
-            triggerNeuralGlow() {
-                const bg = document.getElementById('brain-bg');
-                const overlay = document.getElementById('brain-overlay');
-                
-                // إضافة كلاس التوهج الفائق
-                bg.classList.add('brain-pulse');
-                overlay.classList.add('overlay-pulse');
-                
-                // إيقاف التوهج بعد 800 جزء من الثانية ليعود لشكل 4K الطبيعي
-                setTimeout(() => {
-                    bg.classList.remove('brain-pulse');
-                    overlay.classList.remove('overlay-pulse');
-                }, 800);
-            },
-
-            showToast(msgKey, type = 'success') {
-                const msg = translations[this.lang][msgKey] || msgKey;
-                const container = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.innerHTML = `${type === 'success' ? '✅' : '⚠️'} ${msg}`;
-                container.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
-            },
-
-            toggleLang() {
-                audio.play('tap');
-                this.lang = this.lang === 'en' ? 'ar' : 'en';
-                localStorage.setItem('appLang', this.lang);
-                this.applyLang();
-                if(document.getElementById('view-dashboard').classList.contains('active')) this.renderDash();
-                else if(document.getElementById('view-create').classList.contains('active')) this.updatePlaceholders();
+                this.render();
+                document.getElementById('user-name').value = localStorage.getItem('uname') || '';
             },
 
             applyLang() {
                 document.documentElement.dir = this.lang === 'ar' ? 'rtl' : 'ltr';
-                document.documentElement.lang = this.lang;
-                document.getElementById('langBtnText').innerText = this.lang === 'en' ? 'AR' : 'EN';
-                
-                document.querySelectorAll('[data-i18n]').forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    if (translations[this.lang][key]) el.innerHTML = translations[this.lang][key];
-                });
-                this.updatePlaceholders();
+                document.getElementById('langBtn').innerText = this.lang === 'en' ? 'AR' : 'EN';
+                document.querySelectorAll('[data-i18n]').forEach(el => el.innerText = translations[this.lang][el.getAttribute('data-i18n')]);
+                document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = translations[this.lang][el.getAttribute('data-i18n-ph')]);
             },
 
-            updatePlaceholders() {
-                document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-                    const key = el.getAttribute('data-i18n-ph');
-                    if (translations[this.lang][key]) el.placeholder = translations[this.lang][key];
-                });
-            },
+            toggleLang() { this.lang = this.lang === 'en' ? 'ar' : 'en'; localStorage.setItem('lang', this.lang); this.init(); },
 
-            switchView(view) {
-                audio.play('tap');
-                document.querySelectorAll('.view').forEach(v => { v.classList.remove('active'); setTimeout(() => v.style.display='none', 300); });
-                const target = document.getElementById(`view-${view}`);
-                setTimeout(() => { target.style.display='block'; void target.offsetWidth; target.classList.add('active'); }, 300);
-                
-                if (view === 'dashboard') this.renderDash();
-                else if (view === 'create') {
-                    document.getElementById('table-title').value = '';
-                    document.getElementById('task-list').innerHTML = '';
-                    this.addTaskRow();
-                }
-            },
-
-            renderDash() {
-                const grid = document.getElementById('tables-grid');
-                grid.innerHTML = '';
-                if (!this.data.length) {
-                    grid.innerHTML = `<div class="glass" style="grid-column:1/-1; padding:50px; text-align:center; color:var(--text-secondary); font-size:1.1rem;">${translations[this.lang].noRoutines}</div>`;
-                    return;
-                }
-                
-                const tLang = translations[this.lang];
-                
-                this.data.forEach(item => {
-                    const done = item.tasks.filter(t => t.status === 'completed').length;
-                    const total = item.tasks.length;
-                    
-                    const card = document.createElement('div');
-                    card.className = 'card glass';
-                    card.onclick = () => { audio.play('tap'); this.open(item.id); };
-                    
-                    card.innerHTML = `
-                        <div style="border-bottom:1px solid var(--surface-border); padding-bottom:12px;">
-                            <div style="font-size:1.2rem; font-weight:600; line-height: 1.5; word-wrap: break-word; color: var(--text-primary);">${this.esc(item.title)}</div>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; color:var(--text-secondary); font-size:0.95rem; margin-top:15px; font-weight: 500;">
-                            <span>📋 ${total} ${tLang.tasksLabel}</span>
-                            <span style="color:var(--success-color);">✓ ${done} ${tLang.doneLabel}</span>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            },
+            switchView(v) { document.querySelectorAll('.view').forEach(el => el.classList.remove('active')); document.getElementById('view-'+v).classList.add('active'); if(v==='create') { document.getElementById('task-inputs').innerHTML = ''; this.addTaskRow(); } },
 
             addTaskRow() {
-                audio.play('tap');
-                const list = document.getElementById('task-list');
-                const row = document.createElement('div');
-                row.className = 'task-row';
-                const placeholder = translations[this.lang].taskPlaceholder;
-                row.innerHTML = `
-                    <input type="text" class="t-name" placeholder="${placeholder}" required>
-                    <input type="time" class="t-time" required>
-                    <button class="btn-icon" onclick="audio.play('tap'); this.parentElement.remove()">✕</button>
-                `;
-                list.appendChild(row);
+                const div = document.createElement('div'); div.style.display = 'flex'; div.style.gap = '10px'; div.style.marginBottom = '10px';
+                div.innerHTML = `<input type="text" class="t-n" placeholder="Task..." style="flex:2; background:rgba(0,0,0,0.3); border:1px solid var(--surface-border); padding:10px; border-radius:8px; color:#fff;">
+                                 <input type="time" class="t-t" style="flex:1; background:rgba(0,0,0,0.3); border:1px solid var(--surface-border); padding:10px; border-radius:8px; color:#fff;">`;
+                document.getElementById('task-inputs').appendChild(div);
             },
 
-            saveTable() {
-                const title = document.getElementById('table-title').value.trim() || `Plan ${Math.floor(Math.random()*1000)}`;
-                const rows = document.querySelectorAll('#task-list .task-row');
+            savePlan() {
+                const title = document.getElementById('title-input').value;
                 const tasks = [];
-
-                rows.forEach(r => {
-                    const name = r.querySelector('.t-name').value.trim();
-                    const time = r.querySelector('.t-time').value;
-                    if (name) tasks.push({ name, time: time || '--:--', status: 'pending', completedAt: null });
+                document.querySelectorAll('#task-inputs div').forEach(row => {
+                    const name = row.querySelector('.t-n').value;
+                    if(name) tasks.push({ name, time: row.querySelector('.t-t').value || '--:--', done: false });
                 });
-
-                if (tasks.length === 0) {
-                    this.showToast('emptyAlert', 'error');
-                    return;
-                }
-
-                audio.play('success');
-                this.triggerNeuralGlow(); // توهج درامي عند الحفظ
-                this.data.unshift({ id: Date.now().toString(), title, tasks });
-                localStorage.setItem('plannerV6_ProUltimate', JSON.stringify(this.data));
-                this.switchView('dashboard');
-                this.showToast(this.lang === 'ar' ? 'تم حفظ الخطة بنجاح!' : 'Plan saved successfully!', 'success');
+                if(!title || tasks.length === 0) return;
+                this.data.unshift({ id: Date.now(), title, tasks });
+                this.save(); this.switchView('dashboard'); this.render();
             },
 
-            open(id) {
-                this.currentId = id;
-                const item = this.data.find(i => i.id === id);
-                if (!item) return;
+            save() { localStorage.setItem('np5', JSON.stringify(this.data)); },
 
-                document.getElementById('detail-title').textContent = item.title;
-                const body = document.getElementById('detail-body');
-                body.innerHTML = '';
+            render() {
+                const container = document.getElementById('grid'); container.innerHTML = '';
+                this.data.forEach(p => {
+                    const done = p.tasks.filter(t => t.done).length;
+                    const div = document.createElement('div'); div.className = 'glass card';
+                    div.onclick = () => this.openPlan(p.id);
+                    div.innerHTML = `<h4>${p.title}</h4><p style="font-size:0.8rem; color:var(--text-secondary); margin-top:10px;">${done}/${p.tasks.length} ${translations[this.lang].done}</p>`;
+                    container.appendChild(div);
+                });
+            },
 
-                item.tasks.forEach((t, idx) => {
-                    const isDone = t.status === 'completed';
-                    const row = document.createElement('div');
-                    row.className = 'task-item';
-                    row.innerHTML = `
-                        <div class="task-info">
-                            <span class="task-time">${this.esc(t.time)}</span>
-                            <span class="task-name ${isDone ? 'done' : ''}">${this.esc(t.name)}</span>
-                        </div>
-                        <button class="toggle-btn ${isDone ? 'done' : ''}" onclick="app.toggle(${idx})"></button>
-                    `;
-                    body.appendChild(row);
+            openPlan(id) {
+                this.currentId = id; const p = this.data.find(x => x.id === id);
+                document.getElementById('detail-title').innerText = p.title;
+                const list = document.getElementById('detail-list'); list.innerHTML = '';
+                p.tasks.forEach((t, i) => {
+                    const item = document.createElement('div'); item.className = 'task-item';
+                    item.innerHTML = `<div><span style="color:var(--primary-color); font-weight:bold; margin-right:10px;">${t.time}</span> ${t.name}</div>
+                                      <button class="toggle-btn ${t.done?'done':''}" onclick="app.toggleTask(${i})"></button>`;
+                    list.appendChild(item);
                 });
                 this.switchView('detail');
             },
 
-            toggle(idx) {
-                const item = this.data.find(i => i.id === this.currentId);
-                if (item) {
-                    const isDone = item.tasks[idx].status === 'pending';
-                    item.tasks[idx].status = isDone ? 'completed' : 'pending';
-                    item.tasks[idx].completedAt = isDone ? Date.now() : null; // تسجيل وقت الإنجاز للبطاقة اليومية
-                    audio.play(isDone ? 'success' : 'tap');
-                    if(isDone) this.triggerNeuralGlow(); 
-                    localStorage.setItem('plannerV6_ProUltimate', JSON.stringify(this.data));
-                    this.open(this.currentId);
+            toggleTask(i) {
+                const p = this.data.find(x => x.id === this.currentId);
+                p.tasks[i].done = !p.tasks[i].done;
+                if(p.tasks[i].done) {
+                    document.getElementById('brain-bg').classList.add('brain-pulse');
+                    setTimeout(() => document.getElementById('brain-bg').classList.remove('brain-pulse'), 500);
                 }
+                this.save(); this.openPlan(this.currentId);
             },
 
-            // الحذف المباشر بدون رسائل التأكيد المزعجة
-            deleteCurrentTable() {
-                audio.play('tap');
-                this.data = this.data.filter(i => i.id !== this.currentId);
-                localStorage.setItem('plannerV6_ProUltimate', JSON.stringify(this.data));
-                this.switchView('dashboard');
-                this.showToast('deletedNotice', 'error'); // إشعار صامت فقط
-            },
+            deletePlan() { this.data = this.data.filter(x => x.id !== this.currentId); this.save(); this.switchView('dashboard'); this.render(); },
 
-            esc(str) { return str.replace(/[&<>'"]/g, tag => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[tag])); },
+            saveName() { localStorage.setItem('uname', document.getElementById('user-name').value); this.toast("Name Saved"); },
+            toast(m) { const t = document.createElement('div'); t.className='toast'; t.innerText=m; document.getElementById('toast-container').appendChild(t); setTimeout(()=>t.remove(), 2000); },
 
-            // --- نظام توليد البطاقة اليومية الفخمة بدقة 4K للمشاركة ---
-            downloadSummaryImage() {
-                audio.play('tap');
-                const userName = localStorage.getItem('userName_Validated');
-                if (!userName) { this.showToast('عفواً، يجب إدخال اسمك وحفظه في الأعلى أولاً لتوثيق البطاقة المعرفية اليومية.', 'error'); return; }
+            // --- إصلاح الشعار المطعوج والبطاقة الفخمة ---
+            downloadImage() {
+                const canvas = document.getElementById('canvas'); const ctx = canvas.getContext('2d');
+                canvas.width = 1000; canvas.height = 1300;
+                const uname = localStorage.getItem('uname') || "Mohammed Anas";
+                const doneCount = this.data.reduce((acc, p) => acc + p.tasks.filter(t => t.done).length, 0);
 
-                this.triggerNeuralGlow(); // توهج درامي قبل التحميل
-
-                const tLang = translations[this.lang];
-                
-                // حساب إنجازات اليوم فقط (التوقيت الحالي للنسخة النهائية)
-                const startOfToday = new Date().setHours(0,0,0,0);
-                let doneTodayCount = 0;
-                this.data.forEach(item => {
-                    item.tasks.forEach(task => {
-                        if (task.status === 'completed' && task.completedAt && task.completedAt >= startOfToday) {
-                            doneTodayCount++;
-                        }
-                    });
-                });
-
-                // عبارة تحفيزية عشوائية
-                const phrase = tLang.phrases[Math.floor(Math.random() * tLang.phrases.length)];
-                
-                // جلب لوحة الرسم المخفية
-                const canvas = document.getElementById('sharing-canvas');
-                const ctx = canvas.getContext('2d');
-                
-                // تحديد الحجم الفعلي للوحة الرسم بدقة عالية جداً (4k - 2160x2700) للحفاظ على النقاء
-                canvas.width = 1620;  // 2k width
-                canvas.height = 2025; // 2k height (suitable for story/sharing)
-
-                // تجهيز اتجاه النصوص (عربي/إنجليزي)
-                const isRtl = this.lang === 'ar';
-                ctx.textAlign = isRtl ? 'right' : 'left';
-                const baseLine = 160; 
-                const canvasWidth = canvas.width;
-                const rightAlignX = canvasWidth - baseLine;
-                const leftAlignX = baseLine;
-
-                // رسم البطاقة الفخمة (Glassmorphism Effect) بدقة عالية
-                const logoImg = new Image();
-                logoImg.onload = () => {
-                    // 1. الخلفية الداكنة الغامضة (فائقة الدقة)
-                    ctx.fillStyle = '#030305'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                    // 2. تصميم البطاقة الزجاجية الفخمة (Glass)
-                    ctx.fillStyle = 'rgba(15, 15, 25, 0.9)'; ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)'; ctx.lineWidth = 4;
-                    const cMargin = 100; // الهامش
-                    // دالة مساعدة لرسم مستطيل مستدير الحواف بدقة عالية
-                    ctx.beginPath(); ctx.roundRect(cMargin, cMargin, canvas.width - (cMargin*2), canvas.height - (cMargin*2), 50); ctx.fill(); ctx.stroke();
-
-                    // 3. الشعار (وسط - لا يوجد مطعوج - دائري ومثالي)
-                    const logoWidth = 350; const logoHeight = 350; // حجم شعار فخم
-                    ctx.drawImage(logoImg, (canvas.width / 2) - (logoWidth/2), 200, logoWidth, logoHeight);
-
-                    // 4. النصوص الأساسية (العنوان والاسم)
-                    ctx.fillStyle = '#f8fafc'; ctx.font = '600 70px ' + (isRtl ? 'Tajawal' : 'Outfit'); 
-                    ctx.fillText(tLang.imgTitle, isRtl ? rightAlignX : leftAlignX, 650);
-
-                    // الاسم الموثق باللون الأزرق الفخم
-                    ctx.font = '700 110px ' + (isRtl ? 'Tajawal' : 'Outfit'); ctx.fillStyle = '#0ea5e9';
-                    ctx.fillText(userName, isRtl ? rightAlignX : leftAlignX, 800);
-
-                    // خط فاصل شفاف وفخم
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(leftAlignX, 880); ctx.lineTo(rightAlignX, 880); ctx.stroke();
-
-                    // 5. الإحصائيات (عداد اليوم والمستوى V5)
-                    ctx.fillStyle = '#a3b3c9'; ctx.font = '400 65px ' + (isRtl ? 'Tajawal' : 'Outfit');
-                    ctx.fillText(tLang.imgCompleted, isRtl ? rightAlignX : leftAlignX, 1000);
+                const logo = new Image();
+                logo.src = '1000201034.png';
+                logo.onload = () => {
+                    ctx.fillStyle = '#030305'; ctx.fillRect(0,0,1000,1300);
+                    ctx.fillStyle = '#0a0a0f'; ctx.roundRect(50,50,900,1200,40); ctx.fill();
                     
-                    // العداد باللون الأخضر المتوهج
-                    ctx.fillStyle = '#10b981'; ctx.font = '700 130px ' + (isRtl ? 'Tajawal' : 'Outfit');
-                    ctx.fillText(doneTodayCount + ' ' + tLang.tasksLabel, isRtl ? rightAlignX : leftAlignX, 1150);
-
-                    // مستوى التركيز
-                    ctx.fillStyle = '#a3b3c9'; ctx.font = '400 55px ' + (isRtl ? 'Tajawal' : 'Outfit');
-                    ctx.fillText(tLang.imgLevel, isRtl ? rightAlignX : leftAlignX, 1280);
-
-                    // 6. الملاحظة القانونية الاحترافية الفخمة (محمد أنس) بالخط الفني الإنجليزي
-                    ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(248, 250, 252, 0.8)';
-                    // استخدام خط 'Playfair Display' الفني لهذه الملاحظة
-                    ctx.font = 'italic 500 48px ' + (isRtl ? 'Tajawal' : 'Outfit'); 
-                    const noteStr = tLang.imgSignatureNote;
-                    // تقسيم النص الطويل إذا كان بالإنجليزي
-                    if (!isRtl && ctx.measureText(noteStr).width > (canvasWidth - 320)) {
-                         const split1 = "This Cognitive Report requires direct review";
-                         const split2 = "and validation of Mohammed Anas for Adoption.";
-                         ctx.fillText(split1, canvasWidth / 2, 1420); ctx.fillText(split2, canvasWidth / 2, 1485);
-                    } else { ctx.fillText(noteStr, canvasWidth / 2, 1450); }
-
-                    // 7. العبارة التحفيزية
-                    ctx.fillStyle = '#f8fafc'; ctx.font = 'italic 500 60px ' + (isRtl ? 'Tajawal' : 'Outfit');
-                    ctx.fillText('"' + phrase + '"', canvasWidth / 2, 1620);
-
-                    // 8. الحقوق (فخمة - وسط) مع شعار "V6 Core"
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; ctx.font = '300 35px Outfit';
-                    ctx.fillText('NeuralPlanner V6 Pro - Authorized Validation Required', canvasWidth / 2, 1850);
+                    // رسم الشعار باحترافية (بدون طعج)
+                    const s = 250; // حجم المربع المخصص للشعار
+                    const x = 500 - s/2; const y = 120;
+                    ctx.save();
+                    ctx.beginPath(); ctx.arc(500, y + s/2, s/2, 0, Math.PI*2); ctx.clip();
                     
-                    // تاريخ اليوم
-                    const todayDate = new Date().toLocaleDateString(isRtl ? 'ar-EG' : 'en-US');
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)'; ctx.font = '300 30px Outfit';
-                    ctx.fillText(todayDate, canvasWidth / 2, 1910);
+                    // هذه المعادلة تضمن عدم الطعج (Object-fit: contain)
+                    const ratio = logo.width / logo.height;
+                    let w = s, h = s;
+                    if (ratio > 1) h = s / ratio; else w = s * ratio;
+                    ctx.drawImage(logo, 500 - w/2, y + (s - h)/2, w, h);
+                    ctx.restore();
 
-                    // توليد رابط التحميل تلقائياً
-                    const link = document.createElement('a');
-                    // اسم الملف: [الاسم_ValidatedCard.png]
-                    link.download = `${userName.replace(/\s+/g, '_')}_ValidatedCard_V6Pro.png`;
-                    link.href = canvas.toDataURL('image/png', 1.0); // أعلى جودة 4k
-                    link.click();
-                    link.remove();
+                    ctx.fillStyle = '#0ea5e9'; ctx.font = 'bold 70px Outfit'; ctx.textAlign = 'center'; ctx.fillText(uname, 500, 480);
+                    ctx.fillStyle = '#fff'; ctx.font = '40px Outfit'; ctx.fillText(translations[this.lang].imgTitle || "Cognitive Report", 500, 560);
+                    
+                    ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(150, 620); ctx.lineTo(850, 620); ctx.stroke();
+
+                    ctx.fillStyle = '#10b981'; ctx.font = 'bold 120px Outfit'; ctx.fillText(doneTodayCount || doneCount, 500, 800);
+                    ctx.fillStyle = '#94a3b8'; ctx.font = '40px Outfit'; ctx.fillText(translations[this.lang].tasks || "Tasks Completed", 500, 880);
+
+                    // الملاحظة بالخط الإنجليزي الفخم (Signature Style)
+                    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+                    ctx.font = 'italic 32px Georgia, serif';
+                    const note = translations[this.lang].note;
+                    if(this.lang === 'ar') {
+                        ctx.font = '400 30px Tajawal'; ctx.fillText(note, 500, 1050);
+                    } else {
+                        ctx.fillText("This report requires the direct review", 500, 1030);
+                        ctx.fillText("and adoption of Mohammed Anas.", 500, 1080);
+                    }
+
+                    ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.font = '25px Outfit'; ctx.fillText("Neural Core V5 • 2026", 500, 1200);
+
+                    const link = document.createElement('a'); link.download = 'NeuralCard.png'; link.href = canvas.toDataURL(); link.click();
                 };
-                
-                logoImg.onerror = () => { this.showToast('عفواً، لم أتمكن من تحميل الشعار الاحترافي الخاص بك (1000201034.png). الرجاء التأكد من رفعه في نفس المستودع.', 'error'); };
-                logoImg.src = this.logoPath;
             }
         };
-
-        // دالة مساعدة لرسم مستطيل مستدير الحواف (ضرورية لجودة 4K على القماش)
-        function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
-            if (typeof radius === 'undefined') radius = 5; if (typeof radius === 'number') radius = {tl: radius, tr: radius, bl: radius, br: radius}; else { var defaultRadius = {tl: 0, tr: 0, bl: 0, br: 0}; for (var side in defaultRadius) { radius[side] = radius[side] || defaultRadius[side]; } } ctx.beginPath(); ctx.moveTo(x + radius.tl, y); ctx.lineTo(x + width - radius.tr, y); ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr); ctx.lineTo(x + width, y + height - radius.br); ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height); ctx.lineTo(x + radius.bl, y + height); ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl); ctx.lineTo(x, y + radius.tl); ctx.quadraticCurveTo(x, y, x + radius.tl, y); ctx.closePath(); if (fill) ctx.fill(); if (stroke) ctx.stroke();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => app.init());
+        app.init();
     </script>
 </body>
 </html>
