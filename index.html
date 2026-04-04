@@ -3,424 +3,455 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Planner - Pro Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Daily Planner - Ultra Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            color-scheme: dark;
-            --bg-color: #030305;
-            --surface-color: rgba(15, 15, 20, 0.45); /* شفافية احترافية */
-            --surface-border: rgba(255, 255, 255, 0.1);
-            --text-primary: #ffffff;
-            --text-secondary: #94a3b8;
-            --accent-glow: 0 0 20px rgba(56, 189, 248, 0.15);
-            --primary-color: #38bdf8; /* لون أزرق سماوي احترافي */
-            --danger-color: #f43f5e;
-            --success-color: #10b981;
-            --font-family: 'Poppins', sans-serif;
-            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-dark: #050508;
+            --glass-bg: rgba(15, 15, 22, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-highlight: rgba(255, 255, 255, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-cyan: #22d3ee;
+            --accent-purple: #c084fc;
+            --danger: #fb7185;
+            --success: #34d399;
+            --font-main: 'Outfit', sans-serif;
+            --transition-smooth: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: var(--font-family);
+            font-family: var(--font-main);
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-color);
-            /* ربط صورة المخ */
-            background-image: url('./brain.gif');
+            background-color: var(--bg-dark);
+            background-image: url('brain.gif');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            color: var(--text-primary);
+            color: var(--text-main);
             min-height: 100vh;
             overflow-x: hidden;
-            position: relative;
         }
 
-        /* طبقة تعتيم احترافية متدرجة */
+        /* Overlay to make text readable against the GIF */
         body::before {
             content: "";
             position: fixed;
             inset: 0;
-            background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(3,3,5,0.6) 100%);
+            background: radial-gradient(circle at 50% 0%, rgba(5,5,8,0.7) 0%, rgba(0,0,0,0.9) 100%);
             z-index: -1;
+            backdrop-filter: blur(2px);
         }
 
-        /* --- Intro Animation --- */
-        #intro-overlay {
+        /* --- Intro Loader --- */
+        #loader {
             position: fixed;
             inset: 0;
-            background-color: #000;
-            z-index: 9999;
+            background: #000;
+            z-index: 10000;
             display: flex;
             justify-content: center;
             align-items: center;
-            animation: fadeOutIntro 1s forwards;
-            animation-delay: 2s;
+            flex-direction: column;
+            gap: 20px;
+            transition: opacity 0.8s ease, visibility 0.8s;
         }
 
-        .eyes-container {
-            display: flex;
-            gap: 30px;
-        }
-
-        .eye {
-            width: 40px;
-            height: 10px;
-            background-color: var(--primary-color);
+        .pulse-ring {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            box-shadow: 0 0 25px var(--primary-color);
-            animation: pulseEye 2s infinite, blinkEye 4s infinite;
+            border: 2px solid var(--accent-cyan);
+            animation: pulse 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
         }
 
-        @keyframes pulseEye {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 40px var(--primary-color); }
+        @keyframes pulse {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.7); }
+            70% { transform: scale(1.5); box-shadow: 0 0 0 20px rgba(34, 211, 238, 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); }
         }
 
-        @keyframes blinkEye {
-            0%, 96%, 98%, 100% { transform: scaleY(1); }
-            97%, 99% { transform: scaleY(0.1); }
-        }
-
-        @keyframes fadeOutIntro {
-            to { opacity: 0; visibility: hidden; backdrop-filter: blur(0px); }
-        }
-
-        /* --- Glassmorphism UI --- */
-        .glass {
-            background: var(--surface-color);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--surface-border);
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        /* --- UI Components --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
+            padding: 20px 40px;
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(3, 3, 5, 0.7);
+            background: rgba(5, 5, 8, 0.7);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid var(--glass-border);
         }
 
-        .brand h1 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            background: linear-gradient(to right, #fff, var(--primary-color));
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-main), var(--accent-cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
         }
 
-        .brand span {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 300;
-        }
-
-        button {
-            cursor: pointer;
-            border: none;
-            outline: none;
-            font-family: inherit;
-            transition: var(--transition);
-        }
-
-        .btn-primary {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            padding: 10px 24px;
-            border-radius: 12px;
-            font-size: 0.9rem;
+        .btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-size: 0.95rem;
             font-weight: 500;
-            position: relative;
-            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .btn-primary:hover {
-            background: rgba(56, 189, 248, 0.1);
-            border-color: var(--primary-color);
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+        .btn:hover, .btn:active {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--glass-highlight);
             transform: translateY(-2px);
         }
 
+        .btn-glow {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(192, 132, 252, 0.1));
+            border-color: rgba(34, 211, 238, 0.3);
+            color: var(--accent-cyan);
+        }
+
+        .btn-glow:hover {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(192, 132, 252, 0.2));
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
+        }
+
         main {
-            padding: 40px 5%;
+            padding: 40px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .view {
+        .view-section {
             display: none;
             opacity: 0;
-            transform: translateY(20px);
-            transition: var(--transition);
+            transform: translateY(15px) scale(0.98);
+            transition: var(--transition-smooth);
         }
 
-        .view.active {
+        .view-section.active {
             display: block;
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
 
-        /* --- Cards Grid --- */
+        /* --- Dashboard Grid --- */
+        .header-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 40px;
+        }
+
+        .header-action h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 24px;
         }
 
-        .card {
+        .plan-card {
             padding: 24px;
             cursor: pointer;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .plan-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4), 0 0 20px rgba(34, 211, 238, 0.1);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .card-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .progress-circle {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: conic-gradient(var(--accent-cyan) var(--p), rgba(255,255,255,0.05) 0deg);
+            position: relative;
+        }
+
+        .progress-circle::after {
+            content: "";
+            position: absolute;
+            inset: 4px;
+            background: var(--bg-dark);
+            border-radius: 50%;
+        }
+        .progress-circle span { position: relative; z-index: 1; }
+
+        /* --- Forms & Inputs --- */
+        .input-group { margin-bottom: 30px; }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .modern-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 16px 20px;
+            border-radius: 16px;
+            font-size: 1.05rem;
+            transition: var(--transition-smooth);
+        }
+
+        .modern-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.1);
+        }
+
+        .task-builder {
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
 
-        .card:hover {
-            transform: translateY(-5px) scale(1.02);
-            border-color: rgba(255,255,255,0.2);
-            background: rgba(30, 30, 40, 0.6);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--surface-border);
-            padding-bottom: 12px;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
-        .progress-bar-bg {
-            height: 6px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 5px;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: var(--success-color);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-            box-shadow: 0 0 10px var(--success-color);
-        }
-
-        /* --- Forms --- */
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--surface-border);
-            color: white;
-            padding: 14px 18px;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            transition: var(--transition);
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            background: rgba(0, 0, 0, 0.5);
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
-        }
-
-        .task-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
         .task-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 120px 50px;
             gap: 12px;
-            padding: 12px;
+            align-items: center;
         }
-
-        .task-row input[type="text"] { flex: 2; }
-        .task-row input[type="time"] { flex: 1; }
 
         .btn-icon {
-            width: 45px;
-            border-radius: 12px;
-            background: rgba(244, 63, 94, 0.1);
-            color: var(--danger-color);
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: rgba(251, 113, 133, 0.1);
+            color: var(--danger);
+            border: none;
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 1px solid transparent;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
         }
 
         .btn-icon:hover {
-            background: var(--danger-color);
-            color: white;
-            box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+            background: var(--danger);
+            color: #fff;
+            box-shadow: 0 5px 15px rgba(251, 113, 133, 0.3);
         }
 
-        /* --- Table View --- */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 16px 24px;
-            text-align: left;
-            border-bottom: 1px solid var(--surface-border);
-        }
-
-        th {
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        tr { transition: background 0.3s; }
-        tr:hover { background: rgba(255, 255, 255, 0.02); }
-
-        .status-badge {
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .status-pending {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-secondary);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .status-completed {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success-color);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
-        }
-
-        .status-badge:hover {
-            transform: scale(1.05);
-        }
-
-        .flex-between {
+        /* --- Task List View (Detail) --- */
+        .task-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition-smooth);
         }
+
+        .task-item:last-child { border-bottom: none; }
+        .task-item:hover { background: rgba(255, 255, 255, 0.05); }
+
+        .task-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .task-time {
+            color: var(--accent-purple);
+            font-weight: 600;
+            font-size: 0.95rem;
+            background: rgba(192, 132, 252, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+
+        .task-name {
+            font-size: 1.1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .task-name.done {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .toggle-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--glass-border);
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition-smooth);
+        }
+
+        .toggle-btn.done {
+            background: var(--success);
+            border-color: var(--success);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.4);
+        }
+
+        .toggle-btn::after {
+            content: '✓';
+            opacity: 0;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+
+        .toggle-btn.done::after { opacity: 1; }
 
         @media (max-width: 768px) {
-            .task-row { flex-direction: column; }
-            .task-row .btn-icon { width: 100%; padding: 12px; }
-            th, td { padding: 12px; }
-            .brand h1 { font-size: 1.2rem; }
-            nav { padding: 15px 5%; }
+            nav { padding: 15px 20px; }
+            main { padding: 20px; }
+            .task-row { grid-template-columns: 1fr; }
+            .task-row .modern-input { width: 100%; }
+            .task-info { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .header-action { flex-direction: column; align-items: flex-start; gap: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <div id="intro-overlay">
-        <div class="eyes-container">
-            <div class="eye"></div>
-            <div class="eye"></div>
-        </div>
+    <div id="loader">
+        <div class="pulse-ring"></div>
+        <div style="color: var(--text-muted); font-size: 0.9rem; letter-spacing: 2px;">INITIALIZING SYSTEM</div>
     </div>
 
     <nav>
-        <div class="brand">
-            <h1>Daily Planner</h1>
-            <span>PRO EDITION • Mohammed Anas</span>
-        </div>
-        <div class="nav-links">
-            <button class="btn-primary" onclick="app.switchView('dashboard')">Home</button>
-            <button class="btn-primary" onclick="app.switchView('create')">+ New</button>
-        </div>
+        <div class="brand-logo">Neural Planner</div>
+        <button class="btn" onclick="app.switchView('create')">
+            <span>+</span> New Plan
+        </button>
     </nav>
 
     <main>
-        <div id="view-dashboard" class="view active">
-            <div class="flex-between" style="margin-bottom: 30px;">
-                <h2 style="font-weight: 500;">Your Schedules</h2>
+        <div id="view-dashboard" class="view-section active">
+            <div class="header-action">
+                <h2>My Architectures</h2>
             </div>
             <div id="tables-grid" class="grid"></div>
         </div>
 
-        <div id="view-create" class="view glass" style="padding: 35px;">
-            <h2 style="margin-bottom: 25px; font-weight: 500;">Create Table</h2>
-            <div class="form-group">
-                <label>Table Title</label>
-                <input type="text" id="table-title" placeholder="e.g., University Schedule..." autocomplete="off">
-            </div>
+        <div id="view-create" class="view-section">
+            <div class="glass-panel" style="padding: 40px;">
+                <div class="header-action" style="margin-bottom: 30px;">
+                    <h2>Design New Routine</h2>
+                    <button class="btn" onclick="app.switchView('dashboard')">Cancel</button>
+                </div>
+                
+                <div class="input-group">
+                    <label>Module Title</label>
+                    <input type="text" id="table-title" class="modern-input" placeholder="e.g., Deep Work Protocol..." autocomplete="off">
+                </div>
 
-            <div class="form-group" style="margin-top: 30px;">
-                <label>Tasks List</label>
-                <div id="task-list" class="task-list"></div>
-                <button class="btn-primary" style="width: 100%; border-style: dashed;" onclick="app.addTaskRow()">+ Add New Task</button>
-            </div>
+                <div class="input-group">
+                    <label>Task Sequences</label>
+                    <div id="task-list" class="task-builder"></div>
+                </div>
 
-            <div style="margin-top: 40px; text-align: right;">
-                <button class="btn-primary" style="background: var(--primary-color); color: #000; font-weight: 600; border:none;" onclick="app.saveTable()">✓ Save Schedule</button>
+                <div style="display: flex; gap: 15px; margin-top: 40px;">
+                    <button class="btn" style="flex: 1; border-style: dashed;" onclick="app.addTaskRow()">+ Add Sequence</button>
+                    <button class="btn btn-glow" style="flex: 1;" onclick="app.saveTable()">Launch Protocol</button>
+                </div>
             </div>
         </div>
 
-        <div id="view-detail" class="view">
-            <div class="detail-header flex-between" style="margin-bottom: 20px;">
+        <div id="view-detail" class="view-section">
+            <div class="header-action">
                 <div>
-                    <button class="btn-primary" style="margin-bottom: 15px;" onclick="app.switchView('dashboard')">← Back</button>
-                    <h2 id="detail-title" style="font-weight: 500;">Title</h2>
+                    <button class="btn" style="margin-bottom: 20px; padding: 8px 16px;" onclick="app.switchView('dashboard')">← Return</button>
+                    <h2 id="detail-title">Plan Details</h2>
                 </div>
-                <button class="btn-icon" title="Delete" onclick="app.deleteCurrentTable()">🗑</button>
+                <button class="btn" style="color: var(--danger); border-color: rgba(251,113,133,0.3);" onclick="app.deleteCurrentTable()">Delete Protocol</button>
             </div>
             
-            <div class="glass" style="overflow-x: auto;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Task</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="detail-body"></tbody>
-                </table>
+            <div class="glass-panel" style="padding: 10px 0;">
+                <div id="detail-body"></div>
             </div>
         </div>
     </main>
 
     <script>
-        // --- نظام الصوت الاحترافي المخصص للهواتف ---
-        const audioSystem = {
+        // --- Smart Audio Engine (Works on all mobile browsers) ---
+        const sfx = {
             ctx: null,
             init() {
                 if (!this.ctx) {
@@ -438,105 +469,118 @@
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
 
-                if (type === 'click') {
-                    // صوت نقرة ناعم وعصري
+                const t = this.ctx.currentTime;
+                if (type === 'tap') {
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.05);
-                    gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
-                    osc.start();
-                    osc.stop(this.ctx.currentTime + 0.05);
-                } else if (type === 'success') {
-                    // صوت إنجاز مريح
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(500, this.ctx.currentTime);
-                    osc.frequency.setValueAtTime(800, this.ctx.currentTime + 0.1);
-                    osc.frequency.setValueAtTime(1200, this.ctx.currentTime + 0.2);
-                    gain.gain.setValueAtTime(0, this.ctx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.1, this.ctx.currentTime + 0.05);
-                    gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.3);
-                    osc.start();
-                    osc.stop(this.ctx.currentTime + 0.3);
+                    osc.frequency.setValueAtTime(800, t);
+                    osc.frequency.exponentialRampToValueAtTime(300, t + 0.05);
+                    gain.gain.setValueAtTime(0.05, t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+                    osc.start(t);
+                    osc.stop(t + 0.05);
+                } else if (type === 'done') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, t);
+                    osc.frequency.setValueAtTime(600, t + 0.1);
+                    osc.frequency.setValueAtTime(1000, t + 0.2);
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.05, t + 0.05);
+                    gain.gain.linearRampToValueAtTime(0, t + 0.3);
+                    osc.start(t);
+                    osc.stop(t + 0.3);
                 }
             }
         };
 
-        // فتح نظام الصوت عند أول لمسة للشاشة (مطلوب للهواتف)
-        document.body.addEventListener('pointerdown', () => audioSystem.init(), { once: true });
-        document.body.addEventListener('touchstart', () => audioSystem.init(), { once: true });
+        // Initialize audio on first user interaction anywhere
+        ['click', 'touchstart'].forEach(evt => 
+            document.addEventListener(evt, () => sfx.init(), { once: true })
+        );
 
-        // --- التطبيق ---
+        // --- Core App Logic ---
         const app = {
             data: [],
-            currentTableId: null,
+            currentId: null,
 
             init() {
+                // Remove loader smoothly
                 setTimeout(() => {
-                    const intro = document.getElementById('intro-overlay');
-                    if (intro) intro.remove();
-                }, 3000);
-                this.loadData();
-                this.renderDashboard();
+                    const loader = document.getElementById('loader');
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 800);
+                }, 1500);
+
+                this.load();
+                this.renderDash();
                 this.addTaskRow();
             },
 
-            loadData() {
-                const stored = localStorage.getItem('proPlannerData');
-                if (stored) this.data = JSON.parse(stored);
+            load() {
+                const d = localStorage.getItem('ultraPlanner');
+                if (d) this.data = JSON.parse(d);
             },
 
-            saveData() {
-                localStorage.setItem('proPlannerData', JSON.stringify(this.data));
+            save() {
+                localStorage.setItem('ultraPlanner', JSON.stringify(this.data));
             },
 
-            switchView(viewName) {
-                audioSystem.play('click');
-                document.querySelectorAll('.view').forEach(v => {
+            switchView(view) {
+                sfx.play('tap');
+                document.querySelectorAll('.view-section').forEach(v => {
                     v.classList.remove('active');
-                    setTimeout(() => v.style.display = 'none', 300);
+                    setTimeout(() => v.style.display = 'none', 400);
                 });
                 
-                const target = document.getElementById(`view-${viewName}`);
+                const target = document.getElementById(`view-${view}`);
                 setTimeout(() => {
                     target.style.display = 'block';
-                    setTimeout(() => target.classList.add('active'), 10);
-                }, 300);
+                    // Trigger reflow
+                    void target.offsetWidth; 
+                    target.classList.add('active');
+                }, 400);
                 
-                if (viewName === 'dashboard') this.renderDashboard();
-                else if (viewName === 'create') {
+                if (view === 'dashboard') this.renderDash();
+                else if (view === 'create') {
                     document.getElementById('table-title').value = '';
                     document.getElementById('task-list').innerHTML = '';
                     this.addTaskRow();
                 }
             },
 
-            renderDashboard() {
+            renderDash() {
                 const grid = document.getElementById('tables-grid');
                 grid.innerHTML = '';
 
                 if (this.data.length === 0) {
-                    grid.innerHTML = `<div class="glass" style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-secondary);">No schedules yet. Start planning!</div>`;
+                    grid.innerHTML = `
+                        <div class="glass-panel" style="grid-column: 1/-1; padding: 60px 20px; text-align: center; color: var(--text-muted);">
+                            <div style="font-size: 3rem; margin-bottom: 10px;">📋</div>
+                            System empty. Initiate a new protocol.
+                        </div>`;
                     return;
                 }
 
-                this.data.forEach(table => {
-                    const completed = table.tasks.filter(t => t.status === 'completed').length;
-                    const total = table.tasks.length;
-                    const percent = total ? (completed / total) * 100 : 0;
+                this.data.forEach(item => {
+                    const done = item.tasks.filter(t => t.status === 'completed').length;
+                    const total = item.tasks.length;
+                    const pct = total ? Math.round((done / total) * 100) : 0;
                     
                     const card = document.createElement('div');
-                    card.className = 'card glass';
-                    card.onclick = () => { audioSystem.play('click'); this.openTable(table.id); };
+                    card.className = 'glass-panel plan-card';
+                    card.onclick = () => { sfx.play('tap'); this.open(item.id); };
+                    
+                    // Dynamic color for progress
+                    const color = pct === 100 ? 'var(--success)' : 'var(--accent-cyan)';
+                    
                     card.innerHTML = `
-                        <div class="card-header">
-                            <div class="card-title">${this.escapeHTML(table.title)}</div>
-                        </div>
-                        <div style="color: var(--text-secondary); font-size: 0.9rem;">
-                            ${completed} of ${total} tasks completed
-                        </div>
-                        <div class="progress-bar-bg">
-                            <div class="progress-bar-fill" style="width: ${percent}%"></div>
+                        <div class="card-top">
+                            <div>
+                                <div class="card-title">${this.esc(item.title)}</div>
+                                <div class="card-date">${total} Nodes • ${done} Active</div>
+                            </div>
+                            <div class="progress-circle" style="--p: ${pct}%; --accent-cyan: ${color};">
+                                <span>${pct}%</span>
+                            </div>
                         </div>
                     `;
                     grid.appendChild(card);
@@ -544,88 +588,85 @@
             },
 
             addTaskRow() {
-                audioSystem.play('click');
-                const container = document.getElementById('task-list');
+                sfx.play('tap');
+                const list = document.getElementById('task-list');
                 const row = document.createElement('div');
-                row.className = 'task-row glass';
+                row.className = 'task-row';
                 row.innerHTML = `
-                    <input type="text" class="t-name" placeholder="Task name..." required>
-                    <input type="time" class="t-time" required>
-                    <button class="btn-icon" onclick="audioSystem.play('click'); this.parentElement.remove()">✕</button>
+                    <input type="text" class="modern-input t-name" placeholder="Define parameter..." required>
+                    <input type="time" class="modern-input t-time" required>
+                    <button class="btn-icon" onclick="sfx.play('tap'); this.parentElement.remove()">✕</button>
                 `;
-                container.appendChild(row);
+                list.appendChild(row);
             },
 
             saveTable() {
-                const titleInput = document.getElementById('table-title').value.trim();
-                const title = titleInput || `Plan ${new Date().toLocaleDateString()}`;
+                const title = document.getElementById('table-title').value.trim() || `Protocol ${Math.floor(Math.random()*1000)}`;
                 const rows = document.querySelectorAll('#task-list .task-row');
                 const tasks = [];
 
-                rows.forEach(row => {
-                    const name = row.querySelector('.t-name').value.trim();
-                    const time = row.querySelector('.t-time').value;
-                    if (name) tasks.push({ name, time: time || '--:--', status: 'pending' });
+                rows.forEach(r => {
+                    const name = r.querySelector('.t-name').value.trim();
+                    const time = r.querySelector('.t-time').value;
+                    if (name) tasks.push({ name, time: time || 'Anytime', status: 'pending' });
                 });
 
-                if (tasks.length === 0) return alert("Add at least one task!");
+                if (!tasks.length) return alert("Must define at least one parameter.");
 
-                audioSystem.play('success');
-                this.data.push({ id: Date.now().toString(), title, tasks });
-                this.saveData();
+                sfx.play('done');
+                this.data.unshift({ id: Date.now().toString(), title, tasks });
+                this.save();
                 this.switchView('dashboard');
             },
 
-            openTable(id) {
-                this.currentTableId = id;
-                const table = this.data.find(t => t.id === id);
-                if (!table) return;
+            open(id) {
+                this.currentId = id;
+                const item = this.data.find(i => i.id === id);
+                if (!item) return;
 
-                document.getElementById('detail-title').textContent = table.title;
-                const tbody = document.getElementById('detail-body');
-                tbody.innerHTML = '';
+                document.getElementById('detail-title').textContent = item.title;
+                const body = document.getElementById('detail-body');
+                body.innerHTML = '';
 
-                table.tasks.forEach((task, index) => {
-                    const isCompleted = task.status === 'completed';
-                    const badgeClass = isCompleted ? 'status-completed' : 'status-pending';
+                item.tasks.forEach((t, idx) => {
+                    const isDone = t.status === 'completed';
                     
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td style="color: var(--primary-color); width: 100px;">${this.escapeHTML(task.time)}</td>
-                        <td style="${isCompleted ? 'text-decoration: line-through; opacity: 0.4;' : ''}">${this.escapeHTML(task.name)}</td>
-                        <td style="width: 140px;">
-                            <span class="status-badge ${badgeClass}" onclick="app.toggleTaskStatus(${index})">
-                                ${isCompleted ? '✓ Done' : 'Pending'}
-                            </span>
-                        </td>
+                    const row = document.createElement('div');
+                    row.className = 'task-item';
+                    row.innerHTML = `
+                        <div class="task-info">
+                            <span class="task-time">${this.esc(t.time)}</span>
+                            <span class="task-name ${isDone ? 'done' : ''}">${this.esc(t.name)}</span>
+                        </div>
+                        <button class="toggle-btn ${isDone ? 'done' : ''}" onclick="app.toggle(${idx})"></button>
                     `;
-                    tbody.appendChild(tr);
+                    body.appendChild(row);
                 });
                 this.switchView('detail');
             },
 
-            toggleTaskStatus(index) {
-                const table = this.data.find(t => t.id === this.currentTableId);
-                if (table) {
-                    const isDone = table.tasks[index].status === 'pending';
-                    table.tasks[index].status = isDone ? 'completed' : 'pending';
-                    audioSystem.play(isDone ? 'success' : 'click');
-                    this.saveData();
-                    this.openTable(this.currentTableId);
+            toggle(idx) {
+                const item = this.data.find(i => i.id === this.currentId);
+                if (item) {
+                    const isNowDone = item.tasks[idx].status === 'pending';
+                    item.tasks[idx].status = isNowDone ? 'completed' : 'pending';
+                    sfx.play(isNowDone ? 'done' : 'tap');
+                    this.save();
+                    this.open(this.currentId);
                 }
             },
 
             deleteCurrentTable() {
-                if(confirm("Delete this schedule?")) {
-                    audioSystem.play('click');
-                    this.data = this.data.filter(t => t.id !== this.currentTableId);
-                    this.saveData();
+                if(confirm("Terminate this protocol forever?")) {
+                    sfx.play('tap');
+                    this.data = this.data.filter(i => i.id !== this.currentId);
+                    this.save();
                     this.switchView('dashboard');
                 }
             },
 
-            escapeHTML(str) {
-                return str.replace(/[&<>'"]/g, tag => ({'&': '&amp;','<': '&lt;','>': '&gt;',"'": '&#39;','"': '&quot;'}[tag]));
+            esc(str) {
+                return str.replace(/[&<>'"]/g, tag => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[tag]));
             }
         };
 
