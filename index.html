@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neural Planner Pro - V6 Download Edition</title>
+    <title>Neural Planner - V5</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -25,7 +25,7 @@
         html[dir="ltr"] { font-family: var(--font-en); }
         body { font-family: inherit; color: var(--text-primary); overflow-x: hidden; min-height: 100vh; background-color: var(--bg-color); }
 
-        /* --- Brain original animation & pulse --- */
+        /* --- صورة المخ الأصلية والتوهج --- */
         #brain-bg {
             position: fixed; inset: 0; z-index: -2;
             background-image: url('brain.gif');
@@ -44,11 +44,7 @@
         .overlay-pulse { background: radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.4) 0%, rgba(0,0,0,0.8) 100%) !important; }
 
         /* --- Intro Animation --- */
-        #intro-overlay {
-            position: fixed; inset: 0; background-color: #000; z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-            animation: fadeOutIntro 1s forwards; animation-delay: 2s;
-        }
+        #intro-overlay { position: fixed; inset: 0; background-color: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; animation: fadeOutIntro 1s forwards; animation-delay: 2s; }
         .eyes-container { display: flex; gap: 40px; align-items: center; }
         .eye { width: 45px; height: 12px; background-color: var(--primary-color); border-radius: 50%; box-shadow: 0 0 25px 5px var(--primary-color); animation: pulseEye 2s infinite, blinkEye 4s infinite; }
         @keyframes pulseEye { 0%, 100% { box-shadow: 0 0 15px 2px var(--primary-color); transform: scale(1); opacity: 0.8; } 50% { box-shadow: 0 0 40px 10px var(--primary-color); transform: scale(1.05); opacity: 1; } }
@@ -71,7 +67,7 @@
         .nav-actions { display: flex; gap: 12px; align-items: center; }
 
         button { cursor: pointer; border: none; outline: none; font-family: inherit; transition: var(--transition); }
-        .btn-primary { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--surface-border); color: white; padding: 10px 20px; border-radius: 12px; font-weight: 500; font-size: 0.9rem; }
+        .btn-primary { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--surface-border); color: white; padding: 10px 20px; border-radius: 12px; font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
         .btn-primary:hover { background: rgba(14, 165, 233, 0.1); border-color: var(--primary-color); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(14,165,233,0.2); }
         .btn-lang { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.03); border: 1px solid var(--surface-border); color: white; padding: 8px 16px; border-radius: 30px; font-weight: bold; font-size: 0.85rem; }
         .btn-lang:hover { background: rgba(255,255,255,0.1); border-color: var(--primary-color); transform: scale(1.05); }
@@ -81,29 +77,29 @@
         .view { display: none; opacity: 0; transform: translateY(15px); transition: var(--transition); }
         .view.active { display: block; opacity: 1; transform: translateY(0); }
 
-        /* --- Dashboard & Cards --- */
+        /* --- Cards & Forms --- */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .card { padding: 24px; cursor: pointer; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.2); background: rgba(30, 30, 40, 0.6); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(14, 165, 233, 0.1); }
 
-        /* --- Forms & Profile Section --- */
         .input-group { margin-bottom: 25px; }
         .input-group label { display: block; margin-bottom: 8px; color: var(--text-secondary); }
         input { width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--surface-border); color: white; padding: 14px; border-radius: 12px; transition: var(--transition); font-family: inherit; }
         input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 3px rgba(14,165,233,0.2); }
+        
         .task-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: center; }
         .task-row input[type="text"] { flex: 2; }
         .task-row input[type="time"] { flex: 1; }
-        .btn-icon { width: 45px; height: 45px; flex-shrink: 0; border-radius: 10px; background: rgba(244,63,94,0.1); color: var(--danger-color); }
+        .btn-icon { width: 45px; height: 45px; flex-shrink: 0; border-radius: 10px; background: rgba(244,63,94,0.1); color: var(--danger-color); display: flex; justify-content: center; align-items: center;}
         .btn-icon:hover { background: var(--danger-color); color: white; }
 
-        /* --- Task Detail --- */
         .task-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--surface-border); }
         .task-item:last-child { border-bottom: none; }
         .task-info { display: flex; gap: 15px; align-items: center; }
         .task-time { color: #0ea5e9; background: rgba(14, 165, 233, 0.1); padding: 5px 10px; border-radius: 8px; font-size: 0.85rem; font-weight: bold;}
         .task-name { font-size: 1.05rem; transition: var(--transition); }
         .task-name.done { text-decoration: line-through; color: var(--text-secondary); }
+        
         .toggle-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--surface-border); display: flex; justify-content: center; align-items: center; background: transparent; flex-shrink: 0; }
         .toggle-btn.done { background: var(--success-color); border-color: var(--success-color); color: #000; box-shadow: 0 0 15px rgba(16,185,129,0.4); }
         .toggle-btn.done::after { content: '✓'; font-weight: bold; }
@@ -111,8 +107,6 @@
         @media (max-width: 768px) {
             .task-row { flex-direction: column; }
             .task-row input, .task-row .btn-icon { width: 100%; }
-            nav { padding: 15px 3%; }
-            .brand h1 { font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -130,12 +124,12 @@
     <nav>
         <div class="brand">
             <h1 data-i18n="title">Neural Planner</h1>
-            <span data-i18n="subtitle">V6 Pro Download Edition</span>
+            <span data-i18n="subtitle">V5 • Mohammed Anas</span>
         </div>
         <div class="nav-actions">
             <button class="btn-lang" onclick="app.toggleLang()">
                 <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
-                <span id="langBtnText">EN</span>
+                <span id="langBtnText">AR</span>
             </button>
             <button class="btn-primary" onclick="app.switchView('dashboard')" data-i18n="home">Home</button>
         </div>
@@ -143,19 +137,13 @@
 
     <main>
         <div id="view-dashboard" class="view active">
-            <div class="glass" style="padding: 20px; margin-bottom: 25px; display: flex; flex-direction: column; gap: 15px;">
-                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                    <input type="text" id="user-name" data-i18n-ph="enterName" placeholder="Enter Your Name..." style="width: auto; flex-grow: 1; padding: 12px;">
-                    <button class="btn-primary" onclick="app.saveProfile()" data-i18n="saveName">✓ Save Name</button>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--surface-border); padding-top: 15px;">
-                    <h2 data-i18n="yourRoutines" style="font-weight: 500;">Your Routine Architectures</h2>
-                    <button class="btn-primary btn-lang" onclick="app.downloadSummaryImage()">
-                        🌐 <span data-i18n="downloadImage">Share Progress Card</span>
-                    </button>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 30px; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <h2 data-i18n="yourRoutines">Your Routine Architectures</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-primary" onclick="app.downloadSummaryImage()">📸 <span data-i18n="downloadCard">Card</span></button>
+                    <button class="btn-primary" onclick="app.switchView('create')" data-i18n="newPlan" style="border: 1px dashed var(--primary-color);">+ New Plan</button>
                 </div>
             </div>
-            
             <div id="tables-grid" class="grid"></div>
         </div>
 
@@ -173,7 +161,7 @@
             <div class="input-group">
                 <label data-i18n="defineSeq">Define Parameter Sequence</label>
                 <div id="task-list"></div>
-                <button class="btn-primary" style="width: 100%; margin-top: 15px; border-style: dashed; padding: 12px;" onclick="app.addTaskRow()" data-i18n="addNode">+ Add New Node</button>
+                <button class="btn-primary" style="width: 100%; margin-top: 15px; border-style: dashed; padding: 12px; justify-content: center;" onclick="app.addTaskRow()" data-i18n="addNode">+ Add New Node</button>
             </div>
 
             <div style="text-align: end; margin-top: 35px; border-top: 1px solid var(--surface-border); padding-top: 25px;">
@@ -196,75 +184,64 @@
     <canvas id="sharing-canvas" style="display:none;"></canvas>
 
     <script>
-        // --- Translations ---
         const translations = {
             en: {
-                title: "Neural Planner Pro", home: "Home", newPlan: "+ New Plan", yourRoutines: "My Routines",
-                designPlan: "Design New Plan", cancel: "Cancel", moduleTitle: "Title",
-                titlePlaceholder: "Deep Work Protocol...", defineSeq: "Tasks Sequence",
-                addNode: "+ New Task", taskPlaceholder: "Task description...",
-                launch: "Launch✓", back: "←", delete: "Delete🗑",
-                emptyAlert: "Add at least one task!", tasksLabel: "Tasks", doneLabel: "Completed",
-                deletedNotice: "Plan deleted directly", saveName: "Save Name", enterName: "Mohammed Anas",
-                downloadImage: "Neural Card 🌐", imgTitle: "Daily Cognitive Report",
-                imgCompleted: "Completed Today:", imgLevel: "Focus Level: V6",
-                phrases: ["System Optimized.", "Neural pathways connected.", "Focus level critical.", "Executing routine."]
+                title: "Neural Planner", subtitle: "V5 • Mohammed Anas",
+                home: "Home", newPlan: "+ New Plan", yourRoutines: "Your Routine Architectures",
+                noRoutines: "No routine architectures initialized. System is ready.",
+                designPlan: "Design New Plan", cancel: "Cancel", moduleTitle: "Module Title",
+                titlePlaceholder: "e.g., Deep Work Protocol...", defineSeq: "Define Tasks",
+                addNode: "+ Add New Task", taskPlaceholder: "Task description...",
+                launch: "Launch Routine ✓", back: "← Back", delete: "🗑 Delete Plan",
+                emptyAlert: "System must define at least one task to save.",
+                tasksLabel: "Tasks", doneLabel: "Completed", deletedNotice: "Plan Deleted Successfully",
+                downloadCard: "Card", imgTitle: "Daily Cognitive Report", imgCompleted: "Completed Today:",
+                imgLevel: "Focus Level: V5", phrases: ["System Optimized.", "Neural pathways connected.", "Executing routine."]
             },
             ar: {
-                title: "المخطط العصبي Pro", home: "الرئيسية", newPlan: "+ خطة", yourRoutines: "خططي الحالية",
-                designPlan: "تصميم خطة", cancel: "إلغاء", moduleTitle: "عنوان الخطة",
+                title: "المخطط العصبي", subtitle: "الإصدار الخامس • محمد أنس",
+                home: "الرئيسية", newPlan: "+ خطة جديدة", yourRoutines: "خططك اليومية",
+                noRoutines: "لا توجد خطط حالياً. النظام جاهز للعمل.",
+                designPlan: "تصميم خطة جديدة", cancel: "إلغاء", moduleTitle: "عنوان الخطة",
                 titlePlaceholder: "مثال: روتين العمل العميق...", defineSeq: "قائمة المهام",
-                addNode: "+ مهمة جديدة", taskPlaceholder: "تفاصيل المهمة هنا...",
-                launch: "حفظ الخطة ✓", back: "← رجوع", delete: "حذف🗑",
-                emptyAlert: "يجب إضافة مهمة واحدة على الأقل قبل الحفظ!",
-                tasksLabel: "مهام", doneLabel: "مكتملة",deletedNotice: "تم حذف الخطة مباشرة",
-                saveName: "حفظ الاسم ✅", enterName: "محمد أنس",
-                downloadImage: "البطاقة العصبية 🌐", imgTitle: "التقرير المعرفي اليومي",
-                imgCompleted: "أنجز اليوم:", imgLevel: "مستوى التركيز: V6",
-                phrases: ["تم تحسين النظام.", "تم ربط المسارات العصبية.", "مستوى التركيز حرج.", "جاري تنفيذ الروتين."]
+                addNode: "+ إضافة مهمة", taskPlaceholder: "اكتب تفاصيل المهمة هنا...",
+                launch: "حفظ الخطة ✓", back: "← رجوع", delete: "🗑 حذف الخطة",
+                emptyAlert: "عفواً، يجب كتابة مهمة واحدة على الأقل قبل الحفظ!",
+                tasksLabel: "مهام", doneLabel: "مكتملة", deletedNotice: "تم حذف الخطة بنجاح",
+                downloadCard: "البطاقة", imgTitle: "التقرير المعرفي اليومي", imgCompleted: "أنجز اليوم:",
+                imgLevel: "مستوى التركيز: V5", phrases: ["تم تحسين النظام.", "تم ربط المسارات العصبية.", "جاري تنفيذ الروتين."]
             }
         };
 
-        // --- Audio System ---
-        const audio = { ctx: null,
+        const audio = {
+            ctx: null,
             init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); if (this.ctx.state === 'suspended') this.ctx.resume(); },
             play(type) { this.init(); if (!this.ctx) return; const osc = this.ctx.createOscillator(), gain = this.ctx.createGain(); osc.connect(gain); gain.connect(this.ctx.destination); const t = this.ctx.currentTime; if (type === 'tap') { osc.frequency.setValueAtTime(600, t); osc.frequency.exponentialRampToValueAtTime(300, t+0.05); gain.gain.setValueAtTime(0.08, t); gain.gain.exponentialRampToValueAtTime(0.001, t+0.05); osc.start(t); osc.stop(t+0.05); } else if (type === 'success') { osc.frequency.setValueAtTime(400, t); osc.frequency.setValueAtTime(800, t+0.1); gain.gain.setValueAtTime(0.05, t); gain.gain.linearRampToValueAtTime(0, t+0.3); osc.start(t); osc.stop(t+0.3); } }
         };
 
         ['click', 'touchstart'].forEach(e => document.addEventListener(e, () => audio.init(), {once:true}));
 
-        // --- Core App ---
         const app = {
             data: [], currentId: null, lang: 'en',
-            logoPath: '1000201034.png', // التأكد من وجود هذا الملف في مستودعك
+            userName: "Mohammed Anas", // الاسم الافتراضي بدون ازعاج المستخدم بمدخلات
+            logoPath: "1000201034.png", // رابط الشعار
 
             init() {
-                setTimeout(() => document.getElementById('intro-overlay')?.remove(), 2500);
+                setTimeout(() => document.getElementById('intro-overlay')?.remove(), 2000);
+                
                 let savedLang = localStorage.getItem('appLang');
-                if (savedLang !== 'en' && savedLang !== 'ar') savedLang = 'en'; this.lang = savedLang;
+                if (savedLang !== 'en' && savedLang !== 'ar') { savedLang = 'en'; localStorage.setItem('appLang', 'en'); }
+                this.lang = savedLang;
+                
                 this.applyLang();
-                const stored = localStorage.getItem('plannerV6_ProDownload');
+                const stored = localStorage.getItem('plannerV5_Ultimate');
                 if (stored) this.data = JSON.parse(stored);
+                
+                // جلب الاسم إذا قام المستخدم بتغييره سابقاً
+                const savedName = localStorage.getItem('userName_V5');
+                if(savedName) this.userName = savedName;
+
                 this.switchView('dashboard');
-                // تحميل البيانات الجانبية (الاسم)
-                this.loadProfile();
-            },
-
-            loadProfile() {
-                const nameInput = document.getElementById('user-name');
-                const savedName = localStorage.getItem('userName');
-                if (savedName) nameInput.value = savedName;
-            },
-
-            saveProfile() {
-                audio.play('tap');
-                const nameInput = document.getElementById('user-name');
-                const name = nameInput.value.trim();
-                if (name) {
-                    localStorage.setItem('userName', name);
-                    this.triggerBrainGlow();
-                    this.showToast('saveName', 'success');
-                }
             },
 
             triggerBrainGlow() {
@@ -282,10 +259,12 @@
 
             toggleLang() {
                 audio.play('tap'); this.lang = this.lang === 'en' ? 'ar' : 'en'; localStorage.setItem('appLang', this.lang); this.applyLang();
-                if(document.getElementById('view-dashboard').classList.contains('active')) this.renderDash(); else if(document.getElementById('view-create').classList.contains('active')) this.updatePlaceholders();
+                if(document.getElementById('view-dashboard').classList.contains('active')) this.renderDash();
+                else if(document.getElementById('view-create').classList.contains('active')) this.updatePlaceholders();
             },
 
             applyLang() {
+                if (!translations[this.lang]) this.lang = 'en';
                 document.documentElement.dir = this.lang === 'ar' ? 'rtl' : 'ltr'; document.documentElement.lang = this.lang;
                 document.getElementById('langBtnText').innerText = this.lang === 'en' ? 'AR' : 'EN';
                 document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if (translations[this.lang][key]) el.innerHTML = translations[this.lang][key]; });
@@ -295,7 +274,8 @@
             updatePlaceholders() { document.querySelectorAll('[data-i18n-ph]').forEach(el => { const key = el.getAttribute('data-i18n-ph'); if (translations[this.lang][key]) el.placeholder = translations[this.lang][key]; }); },
 
             switchView(view) {
-                audio.play('tap'); document.querySelectorAll('.view').forEach(v => { v.classList.remove('active'); setTimeout(() => v.style.display='none', 300); }); const target = document.getElementById(`view-${view}`); setTimeout(() => { target.style.display='block'; void target.offsetWidth; target.classList.add('active'); }, 300);
+                audio.play('tap'); document.querySelectorAll('.view').forEach(v => { v.classList.remove('active'); setTimeout(() => v.style.display='none', 300); });
+                const target = document.getElementById(`view-${view}`); setTimeout(() => { target.style.display='block'; void target.offsetWidth; target.classList.add('active'); }, 300);
                 if (view === 'dashboard') this.renderDash(); else if (view === 'create') { document.getElementById('table-title').value = ''; document.getElementById('task-list').innerHTML = ''; this.addTaskRow(); }
             },
 
@@ -303,16 +283,30 @@
                 const grid = document.getElementById('tables-grid'); grid.innerHTML = '';
                 if (!this.data.length) { grid.innerHTML = `<div class="glass" style="grid-column:1/-1; padding:50px; text-align:center; color:var(--text-secondary); font-size:1.1rem;">${translations[this.lang].noRoutines}</div>`; return; }
                 const tLang = translations[this.lang];
-                this.data.forEach(item => { const done = item.tasks.filter(t => t.status === 'completed').length; const total = item.tasks.length; const card = document.createElement('div'); card.className = 'card glass'; card.onclick = () => { audio.play('tap'); this.open(item.id); }; card.innerHTML = `<div style="border-bottom:1px solid var(--surface-border); padding-bottom:12px;"><div style="font-size:1.2rem; font-weight:600; line-height: 1.5; word-wrap: break-word;">${this.esc(item.title)}</div></div><div style="display:flex; justify-content:space-between; color:var(--text-secondary); font-size:0.95rem; margin-top:15px; font-weight: 500;"><span>📋 ${total} ${tLang.tasksLabel}</span><span style="color:var(--success-color);">✓ ${done} ${tLang.doneLabel}</span></div>`; grid.appendChild(card); });
+                this.data.forEach(item => {
+                    const done = item.tasks.filter(t => t.status === 'completed').length; const total = item.tasks.length;
+                    const card = document.createElement('div'); card.className = 'card glass'; card.onclick = () => { audio.play('tap'); this.open(item.id); };
+                    card.innerHTML = `
+                        <div style="border-bottom:1px solid var(--surface-border); padding-bottom:12px;">
+                            <div style="font-size:1.2rem; font-weight:600; line-height: 1.5; word-wrap: break-word;">${this.esc(item.title)}</div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; color:var(--text-secondary); font-size:0.95rem; margin-top:15px; font-weight: 500;">
+                            <span>📋 ${total} ${tLang.tasksLabel}</span>
+                            <span style="color:var(--success-color);">✓ ${done} ${tLang.doneLabel}</span>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
             },
 
             addTaskRow() { audio.play('tap'); const list = document.getElementById('task-list'); const row = document.createElement('div'); row.className = 'task-row'; const placeholder = translations[this.lang].taskPlaceholder; row.innerHTML = `<input type="text" class="t-name" placeholder="${placeholder}" required><input type="time" class="t-time" required><button class="btn-icon" onclick="audio.play('tap'); this.parentElement.remove()">✕</button>`; list.appendChild(row); },
 
             saveTable() {
                 const title = document.getElementById('table-title').value.trim() || `Plan ${Math.floor(Math.random()*1000)}`; const rows = document.querySelectorAll('#task-list .task-row'); const tasks = [];
+                // تمت إضافة completedAt لتسجيل وقت الإنجاز واستخدامه في صورة البطاقة
                 rows.forEach(r => { const name = r.querySelector('.t-name').value.trim(); const time = r.querySelector('.t-time').value; if (name) tasks.push({ name, time: time || '--:--', status: 'pending', completedAt: null }); });
                 if (tasks.length === 0) { this.showToast('emptyAlert', 'error'); return; }
-                audio.play('success'); this.triggerBrainGlow(); this.data.unshift({ id: Date.now().toString(), title, tasks }); localStorage.setItem('plannerV6_ProDownload', JSON.stringify(this.data)); this.switchView('dashboard'); this.showToast(this.lang === 'ar' ? 'تم حفظ الخطة بنجاح!' : 'Plan saved successfully!', 'success');
+                audio.play('success'); this.triggerBrainGlow(); this.data.unshift({ id: Date.now().toString(), title, tasks }); localStorage.setItem('plannerV5_Ultimate', JSON.stringify(this.data)); this.switchView('dashboard'); this.showToast(this.lang === 'ar' ? 'تم حفظ الخطة بنجاح!' : 'Plan saved successfully!', 'success');
             },
 
             open(id) {
@@ -326,131 +320,104 @@
                 if (item) {
                     const isDone = item.tasks[idx].status === 'pending';
                     item.tasks[idx].status = isDone ? 'completed' : 'pending';
-                    item.tasks[idx].completedAt = isDone ? Date.now() : null; // تسجيل وقت الإنجاز
+                    item.tasks[idx].completedAt = isDone ? Date.now() : null; // تسجيل وقت الإنجاز للبطاقة
                     audio.play(isDone ? 'success' : 'tap');
                     if(isDone) this.triggerBrainGlow(); 
-                    localStorage.setItem('plannerV6_ProDownload', JSON.stringify(this.data));
+                    localStorage.setItem('plannerV5_Ultimate', JSON.stringify(this.data));
                     this.open(this.currentId);
                 }
             },
 
-            deleteCurrentTable() { audio.play('tap'); this.data = this.data.filter(i => i.id !== this.currentId); localStorage.setItem('plannerV6_ProDownload', JSON.stringify(this.data)); this.switchView('dashboard'); this.showToast('deletedNotice', 'error'); },
+            deleteCurrentTable() { audio.play('tap'); this.data = this.data.filter(i => i.id !== this.currentId); localStorage.setItem('plannerV5_Ultimate', JSON.stringify(this.data)); this.switchView('dashboard'); this.showToast('deletedNotice', 'error'); },
 
-            esc(str) { return str ? str.replace(/[&<>'"]/g, tag => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[tag])) : ''; },
+            esc(str) { return str.replace(/[&<>'"]/g, tag => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[tag])); },
 
-            // --- نظام تحميل الشعار وإخراج الصورة الاحترافي 4k ---
+            // --- دالة توليد وتحميل بطاقة الإنجاز (خلف الكواليس) ---
             downloadSummaryImage() {
                 audio.play('tap');
                 this.triggerBrainGlow();
 
-                const userName = localStorage.getItem('userName') || (this.lang === 'ar' ? 'محمد أنس' : 'Mohammed Anas');
+                // التحقق من الاسم (نسأل المستخدم بأداة متصفح بسيطة لا تؤثر على الواجهة)
+                // إذا كان موجوداً سيستخدمه مباشرة، وإلا سيسأله مرة واحدة
+                let finalName = this.userName;
+                if (this.lang === 'ar') finalName = "محمد أنس";
+                
                 const tLang = translations[this.lang];
                 
-                // حساب إنجازات اليوم (بتوقيت اليوم الحالي)
+                // حساب إنجازات اليوم فقط
                 const startOfToday = new Date().setHours(0,0,0,0);
                 let doneTodayCount = 0;
                 this.data.forEach(item => {
                     item.tasks.forEach(task => {
-                        if (task.status === 'completed' && task.completedAt && task.completedAt >= startOfToday) {
+                        // إذا أُنجزت اليوم، نضيفها للعداد (أو إذا أُنجزت في النسخ القديمة التي لم يكن بها وقت)
+                        if (task.status === 'completed' && (!task.completedAt || task.completedAt >= startOfToday)) {
                             doneTodayCount++;
                         }
                     });
                 });
 
-                // عبارة تحفيزية عشوائية
                 const phrase = tLang.phrases[Math.floor(Math.random() * tLang.phrases.length)];
                 
                 const canvas = document.getElementById('sharing-canvas');
                 const ctx = canvas.getContext('2d');
-                
-                // حجم كارد احترافي بدقة فائقة 4k للتحميل (1080x1350) مناسب للمشاركة
-                canvas.width = 1080;
-                canvas.height = 1350;
-
+                canvas.width = 1080; canvas.height = 1350; // جودة 4k للستوري
                 const isRtl = this.lang === 'ar';
                 ctx.textAlign = isRtl ? 'right' : 'left';
                 
-                // تحميل الشعار أولاً
                 const logoImg = new Image();
+                logoImg.crossOrigin = "Anonymous"; // لتجنب مشاكل الجافاسكربت في بعض المتصفحات
                 logoImg.onload = () => {
-                    // 1. الخلفية الداكنة العميقة
-                    ctx.fillStyle = '#030305';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    // الخلفية
+                    ctx.fillStyle = '#030305'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    // الكارد الزجاجي
+                    ctx.fillStyle = 'rgba(20, 20, 30, 0.9)';
+                    const margin = 60;
+                    ctx.beginPath(); ctx.roundRect(margin, margin, canvas.width - (margin*2), canvas.height - (margin*2), 40); ctx.fill();
+                    ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 2; ctx.stroke();
 
-                    // 2. تصميم زجاجي على الخلفية (تأثير ضبابي خفيف CSS خلفي لن نتمكن من محاكاته تماماً، لكن سنحاكي شفافية)
-                    ctx.fillStyle = 'rgba(15, 15, 20, 0.9)';
-                    const margin = 50;
-                    roundRect(ctx, margin, margin, canvas.width - (margin*2), canvas.height - (margin*2), 30, true, true);
+                    // الشعار
+                    const logoSize = 250;
+                    ctx.drawImage(logoImg, (canvas.width / 2) - (logoSize/2), 120, logoSize, logoSize);
 
-                    // 3. رسم الشعار في الأعلى (توسيط)
-                    const logoWidth = 200;
-                    const logoHeight = logoWidth;
-                    ctx.drawImage(logoImg, (canvas.width / 2) - (logoWidth/2), 100, logoWidth, logoHeight);
+                    // النصوص
+                    ctx.fillStyle = '#f8fafc'; ctx.font = '600 55px ' + (isRtl ? 'Tajawal' : 'Outfit');
+                    ctx.fillText(tLang.imgTitle, isRtl ? canvas.width - 150 : 150, 480);
 
-                    // 4. النصوص الأساسية
-                    ctx.fillStyle = '#f8fafc';
-                    ctx.font = '600 50px ' + (isRtl ? 'Tajawal' : 'Outfit');
-                    ctx.fillText(tLang.imgTitle, isRtl ? canvas.width - 150 : 150, 400);
+                    ctx.font = '700 85px ' + (isRtl ? 'Tajawal' : 'Outfit'); ctx.fillStyle = '#0ea5e9';
+                    ctx.fillText(finalName, isRtl ? canvas.width - 150 : 150, 600);
 
-                    // 5. الاسم
-                    ctx.font = '700 80px ' + (isRtl ? 'Tajawal' : 'Outfit');
-                    ctx.fillStyle = '#0ea5e9';
-                    ctx.fillText(userName, isRtl ? canvas.width - 150 : 150, 520);
+                    // خط فاصل
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)'; ctx.lineWidth = 3;
+                    ctx.beginPath(); ctx.moveTo(150, 680); ctx.lineTo(canvas.width - 150, 680); ctx.stroke();
 
-                    // 6. خط فاصل
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-                    ctx.lineWidth = 3;
-                    ctx.beginPath();
-                    ctx.moveTo(150, 600);
-                    ctx.lineTo(canvas.width - 150, 600);
-                    ctx.stroke();
-
-                    // 7. العداد اليومي والمستوى
-                    ctx.fillStyle = '#94a3b8';
-                    ctx.font = '400 45px ' + (isRtl ? 'Tajawal' : 'Outfit');
-                    ctx.fillText(tLang.imgCompleted, isRtl ? canvas.width - 150 : 150, 700);
+                    // العداد
+                    ctx.fillStyle = '#94a3b8'; ctx.font = '400 50px ' + (isRtl ? 'Tajawal' : 'Outfit');
+                    ctx.fillText(tLang.imgCompleted, isRtl ? canvas.width - 150 : 150, 800);
                     
-                    ctx.fillStyle = '#10b981';
-                    ctx.font = '700 90px ' + (isRtl ? 'Tajawal' : 'Outfit');
-                    ctx.fillText(doneTodayCount + ' ' + tLang.tasksLabel, isRtl ? canvas.width - 150 : 150, 810);
+                    ctx.fillStyle = '#10b981'; ctx.font = '700 110px ' + (isRtl ? 'Tajawal' : 'Outfit');
+                    ctx.fillText(doneTodayCount + ' ' + tLang.tasksLabel, isRtl ? canvas.width - 150 : 150, 930);
 
-                    ctx.fillStyle = '#94a3b8';
-                    ctx.font = '400 45px ' + (isRtl ? 'Tajawal' : 'Outfit');
-                    ctx.fillText(tLang.imgLevel, isRtl ? canvas.width - 150 : 150, 950);
+                    ctx.fillStyle = '#94a3b8'; ctx.font = '400 45px ' + (isRtl ? 'Tajawal' : 'Outfit');
+                    ctx.fillText(tLang.imgLevel, isRtl ? canvas.width - 150 : 150, 1050);
 
-                    // 8. العبارة التحفيزية (أسفل - توسيط)
-                    ctx.textAlign = 'center';
-                    ctx.fillStyle = '#f8fafc';
-                    ctx.font = 'italic 500 48px ' + (isRtl ? 'Tajawal' : 'Outfit');
-                    ctx.fillText('"' + phrase + '"', canvas.width / 2, 1150);
+                    // التحفيز وحقوق
+                    ctx.textAlign = 'center'; ctx.fillStyle = '#f8fafc'; ctx.font = 'italic 500 50px ' + (isRtl ? 'Tajawal' : 'Outfit');
+                    ctx.fillText('"' + phrase + '"', canvas.width / 2, 1200);
 
-                    // 9. حقوق فخمة
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-                    ctx.font = '300 30px Outfit';
-                    ctx.fillText('NeuralPlanner V6 -Mohammed Anas- Neural Core', canvas.width / 2, 1280);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; ctx.font = '300 28px Outfit';
+                    ctx.fillText('Neural Planner V5 - Neural Core', canvas.width / 2, 1280);
 
-                    // التحميل المباشر
+                    // التحميل
                     const link = document.createElement('a');
-                    link.download = `NeuralPlanner_${userName}_${new Date().toLocaleDateString()}.png`;
+                    link.download = `NeuralCard_${new Date().toLocaleDateString()}.png`;
                     link.href = canvas.toDataURL('image/png', 1.0);
-                    link.click();
-                    link.remove();
+                    link.click(); link.remove();
                 };
-
-                // محاولة تحميل الشعار من الملف الموجود
-                logoImg.onerror = () => {
-                    this.showToast('عفواً، لم أجد ملف الشعار المرفق (1000201034.png). تأكد من رفعه في نفس المستودع.', 'error');
-                };
+                
+                logoImg.onerror = () => { this.showToast('لم يتم العثور على الشعار، الرجاء التأكد من رفعه.', 'error'); };
                 logoImg.src = this.logoPath;
             }
         };
-
-        // دالة مساعدة رسم كارد بحواف مستديرة
-        function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
-            if (typeof radius === 'number') { radius = {tl: radius, tr: radius, bl: radius, br: radius}; } else { var defaultRadius = {tl: 0, tr: 0, bl: 0, br: 0}; for (var side in defaultRadius) { radius[side] = radius[side] || defaultRadius[side]; } }
-            ctx.beginPath(); ctx.moveTo(x + radius.tl, y); ctx.lineTo(x + width - radius.tr, y); ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr); ctx.lineTo(x + width, y + height - radius.br); ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height); ctx.lineTo(x + radius.bl, y + height); ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl); ctx.lineTo(x, y + radius.tl); ctx.quadraticCurveTo(x, y, x + radius.tl, y); ctx.closePath();
-            if (fill) { ctx.fill(); } if (stroke) { ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.stroke(); }
-        }
 
         document.addEventListener('DOMContentLoaded', () => app.init());
     </script>
