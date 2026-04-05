@@ -29,15 +29,15 @@
         .brain-pulse { transform: scale(1.05); filter: brightness(1.5) contrast(1.2); }
 
         /* --- العيون (Intro) --- */
-        #intro-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; animation: fadeOut 1s forwards 2s; }
+        #intro-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; animation: fadeOut 1s forwards 2.5s; }
         .eyes-container { display: flex; gap: 40px; }
-        .eye { width: 45px; height: 12px; background: var(--primary-color); border-radius: 50%; box-shadow: 0 0 20px var(--primary-color); animation: blink 4s infinite; }
+        .eye { width: 45px; height: 12px; background: var(--primary-color); border-radius: 50%; box-shadow: 0 0 25px var(--primary-color); animation: blink 4s infinite; }
         @keyframes blink { 0%, 96%, 100% { transform: scaleY(1); } 98% { transform: scaleY(0.1); } }
         @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
 
         /* --- Navigation --- */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: rgba(3,3,5,0.7); backdrop-filter: blur(15px); border-bottom: 1px solid var(--surface-border); position: sticky; top: 0; z-index: 100; }
-        .brand h1 { font-size: 1.3rem; color: var(--primary-color); }
+        .brand h1 { font-size: 1.3rem; color: var(--primary-color); font-weight: 700; }
         .nav-actions { display: flex; gap: 10px; }
 
         /* --- Buttons --- */
@@ -55,17 +55,19 @@
         .glass { background: var(--surface-color); backdrop-filter: blur(20px); border: 1px solid var(--surface-border); border-radius: 20px; padding: 25px; margin-bottom: 25px; }
         
         .profile-box { display: flex; gap: 10px; margin-top: 15px; }
-        .profile-box input { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--surface-border); padding: 12px; border-radius: 10px; color: #fff; }
+        .profile-box input { flex: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--surface-border); padding: 12px; border-radius: 10px; color: #fff; font-family: inherit; }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .card { padding: 20px; cursor: pointer; }
         .task-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .toggle-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--surface-border); display: flex; align-items: center; justify-content: center; background: none; }
+        .task-item:last-child { border-bottom: none; }
+        
+        .toggle-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--surface-border); display: flex; align-items: center; justify-content: center; background: none; flex-shrink: 0; }
         .toggle-btn.done { background: var(--success-color); border-color: var(--success-color); color: #000; }
         .toggle-btn.done::after { content: '✓'; font-weight: bold; }
 
         .toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; }
-        .toast { background: rgba(0,0,0,0.9); padding: 12px 25px; border-radius: 30px; border: 1px solid var(--primary-color); margin-top: 10px; animation: slideUp 0.3s ease; }
+        .toast { background: rgba(0,0,0,0.9); color: white; padding: 12px 25px; border-radius: 30px; border: 1px solid var(--primary-color); margin-top: 10px; animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
@@ -83,7 +85,7 @@
     <nav>
         <div class="brand">
             <h1 data-i18n="title">Neural Planner</h1>
-            <span style="font-size: 0.7rem; color: var(--text-secondary);">V5 PRO • Mohammed Anas</span>
+            <span style="font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 1px;">V5 PRO • Mohammed Anas</span>
         </div>
         <div class="nav-actions">
             <button class="btn-lang" onclick="app.toggleLang()" id="langBtn">AR</button>
@@ -104,20 +106,20 @@
                 </div>
             </div>
 
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; align-items: center;">
                 <h3 data-i18n="routines">Routines</h3>
-                <button class="btn-primary" onclick="app.switchView('create')" data-i18n="new">+ New</button>
+                <button class="btn-primary" onclick="app.switchView('create')" data-i18n="new">+ New Plan</button>
             </div>
             <div id="grid" class="grid"></div>
         </div>
 
         <div id="view-create" class="view glass">
-            <h2 data-i18n="new">New Plan</h2>
-            <input type="text" id="title-input" placeholder="Title..." style="width: 100%; margin: 20px 0; background: rgba(0,0,0,0.3); border: 1px solid var(--surface-border); padding: 12px; border-radius: 10px; color: #fff;">
+            <h2 data-i18n="new">New Architecture</h2>
+            <input type="text" id="title-input" placeholder="Plan Title..." style="width: 100%; margin: 20px 0; background: rgba(0,0,0,0.3); border: 1px solid var(--surface-border); padding: 12px; border-radius: 10px; color: #fff;">
             <div id="task-inputs"></div>
-            <button class="btn-primary" onclick="app.addTaskRow()" style="width: 100%; margin-top: 10px;">+ Add Task</button>
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn-primary" onclick="app.savePlan()" style="flex: 1; background: var(--success-color); color: #000; border: none;">Save</button>
+            <button class="btn-primary" onclick="app.addTaskRow()" style="width: 100%; margin-top: 10px; border-style: dashed;">+ Add Task Row</button>
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button class="btn-primary" onclick="app.savePlan()" style="flex: 1; background: var(--success-color); color: #000; border: none; font-weight: bold;">Save Protocol</button>
                 <button class="btn-primary" onclick="app.switchView('dashboard')" style="flex: 1;">Cancel</button>
             </div>
         </div>
@@ -125,9 +127,9 @@
         <div id="view-detail" class="view">
             <div class="glass">
                 <button class="btn-primary" onclick="app.switchView('dashboard')" style="margin-bottom: 15px;">← Back</button>
-                <h2 id="detail-title"></h2>
+                <h2 id="detail-title" style="color: var(--primary-color);"></h2>
                 <div id="detail-list" style="margin-top: 20px;"></div>
-                <button class="btn-primary" onclick="app.deletePlan()" style="width: 100%; margin-top: 25px; color: var(--danger-color); border-color: rgba(244,63,94,0.2);">Delete Plan</button>
+                <button class="btn-primary" onclick="app.deletePlan()" style="width: 100%; margin-top: 30px; color: var(--danger-color); border-color: rgba(244,63,94,0.3); background: rgba(244,63,94,0.05);">🗑 Delete Plan</button>
             </div>
         </div>
     </main>
@@ -136,12 +138,12 @@
 
     <script>
         const translations = {
-            en: { title: "Neural Planner", home: "Home", status: "System Status", card: "Neural Card", namePh: "Your Name...", save: "Save Name", routines: "Routines", new: "+ New Plan", tasks: "Tasks", done: "Done", note: "This report requires the direct review of Mohammed Anas for adoption.", footer: "Neural Core V5 Pro" },
-            ar: { title: "المخطط العصبي", home: "الرئيسية", status: "حالة النظام", card: "البطاقة", namePh: "اكتب اسمك هنا...", save: "حفظ الاسم", routines: "الخطط اليومية", new: "+ خطة جديدة", tasks: "مهام", done: "مكتملة", note: "يرجى إرسال هذه البطاقة لمحمد أنس لتوقيعها واعتمادها.", footer: "النواة العصبية V5" }
+            en: { title: "Neural Planner", home: "Home", status: "System Status", card: "Neural Card", namePh: "Your Name...", save: "Save Name", routines: "Routines", new: "New Plan", tasks: "Tasks", done: "Done", note: "Authorized adoption requires direct signature.", imgTitle: "Cognitive Report" },
+            ar: { title: "المخطط العصبي", home: "الرئيسية", status: "حالة النظام", card: "البطاقة", namePh: "اكتب اسمك هنا...", save: "حفظ الاسم", routines: "الخطط اليومية", new: "خطة جديدة", tasks: "مهام", done: "مكتملة", note: "يرجى إرسال هذه البطاقة لمحمد أنس لتوقيعها واعتمادها.", imgTitle: "التقرير المعرفي اليومي" }
         };
 
         const app = {
-            data: JSON.parse(localStorage.getItem('np5')) || [],
+            data: JSON.parse(localStorage.getItem('np5_pro')) || [],
             lang: localStorage.getItem('lang') || 'en',
             currentId: null,
 
@@ -160,11 +162,15 @@
 
             toggleLang() { this.lang = this.lang === 'en' ? 'ar' : 'en'; localStorage.setItem('lang', this.lang); this.init(); },
 
-            switchView(v) { document.querySelectorAll('.view').forEach(el => el.classList.remove('active')); document.getElementById('view-'+v).classList.add('active'); if(v==='create') { document.getElementById('task-inputs').innerHTML = ''; this.addTaskRow(); } },
+            switchView(v) { 
+                document.querySelectorAll('.view').forEach(el => el.classList.remove('active')); 
+                document.getElementById('view-'+v).classList.add('active'); 
+                if(v==='create') { document.getElementById('task-inputs').innerHTML = ''; this.addTaskRow(); } 
+            },
 
             addTaskRow() {
                 const div = document.createElement('div'); div.style.display = 'flex'; div.style.gap = '10px'; div.style.marginBottom = '10px';
-                div.innerHTML = `<input type="text" class="t-n" placeholder="Task..." style="flex:2; background:rgba(0,0,0,0.3); border:1px solid var(--surface-border); padding:10px; border-radius:8px; color:#fff;">
+                div.innerHTML = `<input type="text" class="t-n" placeholder="Task description..." style="flex:2; background:rgba(0,0,0,0.3); border:1px solid var(--surface-border); padding:10px; border-radius:8px; color:#fff;">
                                  <input type="time" class="t-t" style="flex:1; background:rgba(0,0,0,0.3); border:1px solid var(--surface-border); padding:10px; border-radius:8px; color:#fff;">`;
                 document.getElementById('task-inputs').appendChild(div);
             },
@@ -181,7 +187,7 @@
                 this.save(); this.switchView('dashboard'); this.render();
             },
 
-            save() { localStorage.setItem('np5', JSON.stringify(this.data)); },
+            save() { localStorage.setItem('np5_pro', JSON.stringify(this.data)); },
 
             render() {
                 const container = document.getElementById('grid'); container.innerHTML = '';
@@ -201,7 +207,7 @@
                 p.tasks.forEach((t, i) => {
                     const item = document.createElement('div'); item.className = 'task-item';
                     item.innerHTML = `<div><span style="color:var(--primary-color); font-weight:bold; margin-right:10px;">${t.time}</span> ${t.name}</div>
-                                      <button class="toggle-btn ${t.done?'done':''}" onclick="app.toggleTask(${i})"></button>`;
+                                      <button class="toggle-btn ${t.done?'done':''}" onclick="event.stopPropagation(); app.toggleTask(${i})"></button>`;
                     list.appendChild(item);
                 });
                 this.switchView('detail');
@@ -212,64 +218,69 @@
                 p.tasks[i].done = !p.tasks[i].done;
                 if(p.tasks[i].done) {
                     document.getElementById('brain-bg').classList.add('brain-pulse');
-                    setTimeout(() => document.getElementById('brain-bg').classList.remove('brain-pulse'), 500);
+                    setTimeout(() => document.getElementById('brain-bg').classList.remove('brain-pulse'), 600);
                 }
                 this.save(); this.openPlan(this.currentId);
             },
 
             deletePlan() { this.data = this.data.filter(x => x.id !== this.currentId); this.save(); this.switchView('dashboard'); this.render(); },
 
-            saveName() { localStorage.setItem('uname', document.getElementById('user-name').value); this.toast("Name Saved"); },
-            toast(m) { const t = document.createElement('div'); t.className='toast'; t.innerText=m; document.getElementById('toast-container').appendChild(t); setTimeout(()=>t.remove(), 2000); },
+            saveName() { localStorage.setItem('uname', document.getElementById('user-name').value); this.toast("Name Saved ✅"); },
+            toast(m) { const t = document.createElement('div'); t.className='toast'; t.innerText=m; document.getElementById('toast-container').appendChild(t); setTimeout(()=>t.remove(), 2500); },
 
-            // --- إصلاح الشعار المطعوج والبطاقة الفخمة ---
             downloadImage() {
                 const canvas = document.getElementById('canvas'); const ctx = canvas.getContext('2d');
-                canvas.width = 1000; canvas.height = 1300;
+                canvas.width = 1000; canvas.height = 1350;
                 const uname = localStorage.getItem('uname') || "Mohammed Anas";
-                const doneCount = this.data.reduce((acc, p) => acc + p.tasks.filter(t => t.done).length, 0);
+                
+                let doneCount = 0;
+                this.data.forEach(p => doneCount += p.tasks.filter(t => t.done).length);
 
                 const logo = new Image();
                 logo.src = '1000201034.png';
                 logo.onload = () => {
-                    ctx.fillStyle = '#030305'; ctx.fillRect(0,0,1000,1300);
-                    ctx.fillStyle = '#0a0a0f'; ctx.roundRect(50,50,900,1200,40); ctx.fill();
+                    // Background
+                    ctx.fillStyle = '#030305'; ctx.fillRect(0,0,1000,1350);
+                    ctx.fillStyle = 'rgba(15,15,25,0.9)'; ctx.beginPath();
+                    // Draw Rounded Rect manually for better support
+                    const r=40, x=50, y=50, w=900, h=1250;
+                    ctx.moveTo(x+r, y); ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r); ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h); ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r); ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y); ctx.closePath(); ctx.fill();
                     
-                    // رسم الشعار باحترافية (بدون طعج)
-                    const s = 250; // حجم المربع المخصص للشعار
-                    const x = 500 - s/2; const y = 120;
+                    // Logo aspect ratio fix (Anti-Distortion)
+                    const s = 250; 
+                    const lx = 500 - s/2, ly = 130;
                     ctx.save();
-                    ctx.beginPath(); ctx.arc(500, y + s/2, s/2, 0, Math.PI*2); ctx.clip();
+                    ctx.beginPath(); ctx.arc(500, ly + s/2, s/2, 0, Math.PI*2); ctx.clip();
                     
-                    // هذه المعادلة تضمن عدم الطعج (Object-fit: contain)
                     const ratio = logo.width / logo.height;
-                    let w = s, h = s;
-                    if (ratio > 1) h = s / ratio; else w = s * ratio;
-                    ctx.drawImage(logo, 500 - w/2, y + (s - h)/2, w, h);
+                    let nw = s, nh = s;
+                    if (ratio > 1) nh = s / ratio; else nw = s * ratio;
+                    ctx.drawImage(logo, 500 - nw/2, ly + (s - nh)/2, nw, nh);
                     ctx.restore();
 
-                    ctx.fillStyle = '#0ea5e9'; ctx.font = 'bold 70px Outfit'; ctx.textAlign = 'center'; ctx.fillText(uname, 500, 480);
-                    ctx.fillStyle = '#fff'; ctx.font = '40px Outfit'; ctx.fillText(translations[this.lang].imgTitle || "Cognitive Report", 500, 560);
+                    // Text
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = '#0ea5e9'; ctx.font = 'bold 75px Outfit'; ctx.fillText(uname, 500, 500);
+                    ctx.fillStyle = '#fff'; ctx.font = '45px Outfit'; ctx.fillText(translations[this.lang].imgTitle, 500, 580);
                     
-                    ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(150, 620); ctx.lineTo(850, 620); ctx.stroke();
+                    ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(200, 650); ctx.lineTo(800, 650); ctx.stroke();
 
-                    ctx.fillStyle = '#10b981'; ctx.font = 'bold 120px Outfit'; ctx.fillText(doneTodayCount || doneCount, 500, 800);
-                    ctx.fillStyle = '#94a3b8'; ctx.font = '40px Outfit'; ctx.fillText(translations[this.lang].tasks || "Tasks Completed", 500, 880);
+                    ctx.fillStyle = '#10b981'; ctx.font = 'bold 140px Outfit'; ctx.fillText(doneCount, 500, 850);
+                    ctx.fillStyle = '#94a3b8'; ctx.font = '45px Outfit'; ctx.fillText(translations[this.lang].tasks, 500, 930);
 
-                    // الملاحظة بالخط الإنجليزي الفخم (Signature Style)
-                    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+                    // Professional Note
+                    ctx.fillStyle = 'rgba(248, 250, 252, 0.7)';
                     ctx.font = 'italic 32px Georgia, serif';
-                    const note = translations[this.lang].note;
                     if(this.lang === 'ar') {
-                        ctx.font = '400 30px Tajawal'; ctx.fillText(note, 500, 1050);
+                        ctx.font = '500 32px Tajawal'; ctx.fillText(translations.ar.note, 500, 1080);
                     } else {
-                        ctx.fillText("This report requires the direct review", 500, 1030);
-                        ctx.fillText("and adoption of Mohammed Anas.", 500, 1080);
+                        ctx.fillText("This report requires the direct review", 500, 1060);
+                        ctx.fillText("and authorized signature of Mohammed Anas.", 500, 1110);
                     }
 
-                    ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.font = '25px Outfit'; ctx.fillText("Neural Core V5 • 2026", 500, 1200);
+                    ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.font = '28px Outfit'; ctx.fillText("Neural Core V5 • Authorized Adoption", 500, 1240);
 
-                    const link = document.createElement('a'); link.download = 'NeuralCard.png'; link.href = canvas.toDataURL(); link.click();
+                    const link = document.createElement('a'); link.download = 'NeuralCard_Pro.png'; link.href = canvas.toDataURL(); link.click();
                 };
             }
         };
@@ -277,3 +288,4 @@
     </script>
 </body>
 </html>
+
